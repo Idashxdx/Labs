@@ -1,0 +1,7 @@
+1 Amir Kabirov 15000.00
+2 Ivan Kolos 30500.00
+3 Artem Orlov 20000.00
+4 Amir Kabirov 15000.00
+5 Annassss Victorov 25000.00
+6 Daniil Victorov 25000.00
+
