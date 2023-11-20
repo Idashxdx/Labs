@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <stdbool.h>
 #include <math.h>
 #define MAX 9007199254740991.0
 #define MIN_EPSILON 0.000000001
@@ -39,7 +40,7 @@ double e_equat(double epsilon);
 double pi_equat(double epsilon);
 double ln2_equat(double epsilon);
 double sqrt2_equat(double epsilon);
+bool isPrime(int t);
 double gam_equat(double epsilon);
-
 
 #endif

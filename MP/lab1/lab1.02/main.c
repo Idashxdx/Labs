@@ -28,14 +28,14 @@ int main(int argc, char *argv[])
                 printf("e = %.9lf\n", e_row(epsilon));
                 printf("pi = %.9lf\n", pi_row(epsilon));
                 printf("ln2 = %.9lf \n", ln2_row(epsilon));
-                //     printf("sqrt2 = %.9lf\n", sqrt2_row(epsilon));
-                //    printf("gamma = %.9lf\n", gam_row(epsilon));
-                //    printf("\nSOLUTION THROUNGH THE EQUATION\n");
-                //    printf("e = %.9lf\n", e_equat(epsilon));
-                //    printf("pi = %.9lf\n", pi_equat(epsilon));
-                //     printf("ln2 = %.9lf\n", ln2_equat(epsilon));
-                //    printf("sqrt2 = %.9lf\n", sqrt2_equat(epsilon));
-                //    printf("gamma = %.9lf\n", gam_equat(epsilon));
+                printf("sqrt2 = %.9lf\n", sqrt2_row(epsilon));
+                printf("gamma = %.9lf\n", gam_row(epsilon));
+                printf("\nSOLUTION THROUNGH THE EQUATION\n");
+                printf("e = %.9lf\n", e_equat(epsilon));
+                printf("pi = %.9lf\n", pi_equat(epsilon));
+                printf("ln2 = %.9lf\n", ln2_equat(epsilon));
+                printf("sqrt2 = %.9lf\n", sqrt2_equat(epsilon));
+                printf("gamma = %.9lf\n", gam_equat(epsilon));
                 break;
             case incorrect:
                 printf("INCORRECT DATA\n");

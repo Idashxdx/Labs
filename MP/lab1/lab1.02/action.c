@@ -31,6 +31,55 @@ check_epsilon correct_epsilon(const double *epsilon)
     }
     return correct;
 }
+double e_equat(double epsilon)
+{
+    double x = 2;
+    double result = x;
+    do
+    {
+        x = result;
+        result = x - (log(x) - 1) * x;
+
+    } while (fabs(result - x) > epsilon);
+    return result;
+}
+double pi_equat(double epsilon)
+{
+    double x = 3;
+    double result = x;
+    do
+    {
+        x = result;
+        result = x + (cos(x) + 1) / (sin(x));
+
+    } while (fabs(result - x) > epsilon);
+    return result;
+}
+double ln2_equat(double epsilon)
+{
+    double e = e_equat(epsilon);
+    double x = 1;
+    double result = x;
+    do
+    {
+        x = result;
+        result = x - ((pow(e, x) - 2) / (pow(e, x)));
+
+    } while (fabs(result - x) > epsilon);
+    return result;
+}
+double sqrt2_equat(double epsilon)
+{
+    double x = 2;
+    double result = x;
+    do
+    {
+        x = result;
+        result = x - (x * x - 2) / (2 * x);
+
+    } while (fabs(result - x) > epsilon);
+    return result;
+}
 double e_lim(double epsilon)
 {
     int n = 1;
@@ -83,7 +132,7 @@ double e_row(double epsilon)
         n++;
         result = sum;
         factorial *= n;
-        sum += 1/factorial;
+        sum += 1 / factorial;
 
     } while (fabs(result - sum) > epsilon);
     return result;
@@ -105,6 +154,23 @@ double pi_row(double epsilon)
     } while (fabs(result - sum) > epsilon);
     return 4 * result;
 }
+double ln2_row(double epsilon)
+{
+    int n = 1;
+    double numerator = 1;
+    double sum = numerator / n;
+    double result = sum;
+    double fraction;
+    do
+    {
+        n++;
+        numerator *= -1;
+        result = sum;
+        fraction = numerator / n;
+        sum += fraction;
+    } while (fabs(result - sum) > epsilon);
+    return result;
+}
 double sqrt2_lim(double epsilon)
 {
     double x = -0.5;
@@ -117,17 +183,20 @@ double sqrt2_lim(double epsilon)
     } while (fabs(result - x) > epsilon);
     return result;
 }
+double sqrt2_row(double epsilon)
+{
+    double comp = 1;
+    double result = comp;
+    double degree = pow(2, 0.25);
+    do
+    {
+        result = comp;
+        comp *= degree;
+        degree = pow(degree, 0.5);
 
-
-
-double ln2_row(double epsilon);
-double sqrt2_row(double epsilon);
-double gam_row(double epsilon);
-double e_equat(double epsilon);
-double pi_equat(double epsilon);
-double ln2_equat(double epsilon);
-double sqrt2_equat(double epsilon);
-double gam_equat(double epsilon);
+    } while (fabs(result - comp) > epsilon);
+    return result;
+}
 double gam_lim(double epsilon)
 {
     if (epsilon < 0.0001)
@@ -159,4 +228,80 @@ double gam_lim(double epsilon)
 
     } while (fabs(result - lim) > epsilon);
     return result;
+}
+int is_prime(int t)
+{
+    if (t <= 0)
+    {
+        return -1;
+    }
+    if (t == 2)
+    {
+        return 1;
+    }
+    if (!(t & 1))
+    {
+        return 0;
+    }
+    for (int i = 3; i <= (int)sqrt(t); i += 2)
+    {
+        if (t % i == 0)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+bool isPrime(int t)
+{
+    if (t <= 1)
+    {
+        return false;
+    }
+    for (int i = 2; i * i <= t; i++)
+    {
+        if (t % i == 0)
+        {
+            return false;
+        }
+    }
+    return true;
+}
+double gam_equat(double epsilon)
+{
+    int t = 2;
+    double p = 0.5;
+    double lim = -log(p * log(2)); //t=2
+    double result = lim;
+    do
+    {
+        t++;
+        result = lim;
+        if (is_prime(t))
+        {
+            p *= (t - 1.0) / t;
+        }
+        lim = -log(p * log(t));
+    } while (fabsl(result - lim) >= epsilon);
+    return result;
+}
+double gam_row(double epsilon)
+{
+    double k = 2;
+    double pi = pi_row(epsilon);
+    double summand = pi * pi / 6;
+    double sum = (1.0 / pow(floor(sqrt(k)), 2)) - (1.0 / k);
+    double result = sum;
+    double staples;
+    double sqrtk;
+    do
+    {
+        k++;
+        result = sum;
+        staples = (1.0 / pow(floor(sqrt(k)), 2)) - (1.0 / k);
+        sum += staples;
+        sqrtk = sqrt(k);
+
+    } while ((sqrtk * sqrtk == k) || fabs(result - sum) > epsilon);
+    return result - summand;
 }
