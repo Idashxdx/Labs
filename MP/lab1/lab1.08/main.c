@@ -94,7 +94,6 @@ int main(int argc, char *argv[])
         fclose(input_file);
         fclose(output_file);
     }
-
     printf("\n\nM8O-211B-22  Mashrabova  lab1 tack8\n");
     return 0;
 }
