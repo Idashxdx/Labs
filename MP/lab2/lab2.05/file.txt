@@ -1,0 +1,5 @@
+1. 21 in Roman numerals ---> XXI
+2. 21 Zeckendorf representation ---> 10000001
+3. 175 in 16 number system ---> af
+4. -175 in 16 number system ---> -AF
+4. af in 10 number system ---> 167180013

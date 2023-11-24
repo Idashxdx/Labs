@@ -1,6 +1,6 @@
 # Лабораторная работа 2, Задача 5
-
-Запуск: gcc main.c action.c  
+в процессе
+Запуск: gcc main.c action.c -lm  
 ./a.out  
 
 
