@@ -14,7 +14,8 @@ typedef enum check_data
     correct_data,
     incorrect_data,
     realloc_memory_error,
-    incorrect_file
+    incorrect_file,
+    malloc_memory_error
 } check_data;
 
 check_data substring_search(const char * str, int count, ...);

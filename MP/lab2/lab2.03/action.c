@@ -18,7 +18,13 @@ check_data substring_search(const char *str, int count, ...)
             return incorrect_file;
         }
         int symbol;
-        char *result = NULL;
+        char *result = (char *)malloc(count * sizeof(char));
+        if (result == NULL)
+        {
+            va_end(args);
+            fclose(file);
+            return malloc_memory_error;
+        }
         // размер и длина результата
         size_t size = 0;
         size_t length = 0;
@@ -28,7 +34,7 @@ check_data substring_search(const char *str, int count, ...)
         // пдлина подстроки и текущей
         size_t substring_length = strlen(str);
         size_t current_position = 0;
-        while ((symbol = fgetc(file)) != EOF) //читаем по символу из файла
+        while ((symbol = fgetc(file)) != EOF) // читаем по символу из файла
         {
             if (symbol == '\n')
             {
@@ -43,8 +49,8 @@ check_data substring_search(const char *str, int count, ...)
             // сравниваем символ с подстрокой,
             if (symbol == str[current_position])
             {
-                current_position++; 
-                if (current_position == substring_length)//длина подстроки = длина вхождения ---> вхождение найдено
+                current_position++;
+                if (current_position == substring_length) // длина подстроки = длина вхождения ---> вхождение найдено
                 {
                     size_t new_size = size + 256;
                     char *new_result = (char *)realloc(result, new_size);
@@ -57,13 +63,12 @@ check_data substring_search(const char *str, int count, ...)
                     }
                     result = new_result;
                     size = new_size;
-                    int print_resilt = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number-substring_length);
+                    int print_resilt = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number - substring_length);
                     if (print_resilt >= 0)
                     {
                         length += print_resilt;
                     }
                     current_position = 0;
-                     
                 }
             }
             else
@@ -73,7 +78,6 @@ check_data substring_search(const char *str, int count, ...)
         }
         fclose(file);
         free(result);
-       
     }
     va_end(args);
     return correct_data;
