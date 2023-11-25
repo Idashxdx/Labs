@@ -1,5 +1,5 @@
 # Лабораторная работа 2, Задача 5
-в процессе
+в процессе - overfprintf - готово, осталось oversprintf
 Запуск: gcc main.c action.c -lm  
 ./a.out  
 

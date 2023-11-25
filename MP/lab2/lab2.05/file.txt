@@ -2,4 +2,9 @@
 2. 21 Zeckendorf representation ---> 10000001
 3. 175 in 16 number system ---> af
 4. -175 in 16 number system ---> -AF
-4. af in 10 number system ---> 167180013
+5. af in 10 number system ---> 175
+6. AB in 10 number system ---> 171
+7. memory dump int ---> 00101000 00000000 00000000 00000000 
+8. memory dump unsigned int ---> 00101000 00000000 00000000 00000000 
+9. memory dump float ---> 00000000 00000000 10000000 01000000 
+10. memory dump double ---> 00000000 00000000 00000000 00000000 00000000 00000000 00010100 01000000 

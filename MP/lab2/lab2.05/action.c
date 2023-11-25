@@ -2,11 +2,10 @@
 //%Ro
 char *in_roman_numerals(int number)
 {
-
     int position = 0;
     const int regular_numbers[] = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
     const char *roman_numerals[] = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
-    char *roman = malloc(sizeof(char) * 16);
+    char *roman = (char *)malloc(sizeof(char) * 16);
     if (roman == NULL)
     {
         return NULL;
@@ -107,9 +106,11 @@ char *representation_at_base(int number, int base)
         size = 2;
     }
     else
+
     {
         size += log(number) / log(base) + 1;
     }
+
     char *result = (char *)malloc(sizeof(char) * (size + 1));
     if (result == NULL)
     {
@@ -166,11 +167,40 @@ char *conversion_to_decimal(char *number, int base)
     char *result = (char *)malloc(sizeof(char) * (size + 1));
     if (result == NULL)
     {
-        return NULL; // Обработка ошибки выделения памяти
+        return NULL;
     }
     snprintf(result, size + 1, "%d", decimal);
     return result;
 }
+//%m...
+char *memory_dump(void *number, int size)
+{
+    size_t binary_size = size * 9; // 8 бит на каждый байт +1 на пробел
+    char *result = (char *)malloc(sizeof(char) * binary_size);
+    if (result == NULL)
+    {
+        return NULL;
+    }
+    char *byte = (char *)number; // указатель на байт
+    int position = 0;
+    //- план - извлекаем каждый бит - преобразуем бит в 0 или 1- записываем в результат
+    // добавляем пробел и переходим к следующему байту
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 7; j >= 0; j--)
+        {
+            char bit = ((*byte) >> j) & 1;
+            result[position] = ((int)bit) + '0';
+            position++;
+        }
+        result[position] = ' ';
+        position++;
+        byte++;
+    }
+    result[position] = '\0';
+    return result;
+}
+
 int overfprintf(FILE *file, const char *flag, ...)
 {
     va_list args;
@@ -199,6 +229,7 @@ int overfprintf(FILE *file, const char *flag, ...)
                 else
                 {
                     fprintf(file, "%s", roman);
+                    free(roman);
                 }
 
                 flag++;
@@ -215,6 +246,7 @@ int overfprintf(FILE *file, const char *flag, ...)
                 else
                 {
                     fprintf(file, "%s", zeckendorf);
+                    free(zeckendorf);
                 }
                 flag++;
             }
@@ -239,6 +271,7 @@ int overfprintf(FILE *file, const char *flag, ...)
                         representation[i] = tolower(representation[i]); // Приводим символы к нижнему регистру
                     }
                     fprintf(file, "%s", representation);
+                    free(representation);
                 }
                 flag++;
             }
@@ -259,6 +292,7 @@ int overfprintf(FILE *file, const char *flag, ...)
                 else
                 {
                     fprintf(file, "%s", representation);
+                    free(representation);
                 }
                 flag++;
             }
@@ -275,17 +309,122 @@ int overfprintf(FILE *file, const char *flag, ...)
                 {
                     fprintf(file, "incorrect data");
                 }
-                //написать проверку на нижний регистр!!!!!!!!!!!!!!!!!
-                char *decimal = conversion_to_decimal(input, base);
-                if (decimal == NULL)
+
+                if (islower(*input))
+                {
+
+                    char *decimal = conversion_to_decimal(input, base);
+                    if (decimal == NULL)
+                    {
+                        fprintf(file, "error memory malloc");
+                    }
+                    else
+                    {
+                        fprintf(file, "%s", decimal);
+                        free(decimal);
+                    }
+                }
+                else
+                {
+                    fprintf(file, "incorrect data");
+                }
+
+                flag++;
+            }
+
+            else if (*flag == 'T' && *(flag + 1) == 'O')
+            {
+                char *input = va_arg(args, char *);
+                int base = va_arg(args, int);
+                if (base < 2 || base > 36)
+                {
+                    base = 10;
+                }
+                if (input == NULL)
+                {
+                    fprintf(file, "incorrect data");
+                }
+
+                if (!islower(*input))
+                {
+
+                    char *decimal = conversion_to_decimal(input, base);
+                    if (decimal == NULL)
+                    {
+                        fprintf(file, "error memory malloc");
+                    }
+                    else
+                    {
+                        fprintf(file, "%s", decimal);
+                        free(decimal);
+                    }
+                }
+                else
+                {
+                    fprintf(file, "incorrect data");
+                }
+
+                flag++;
+            }
+            //%mi,mu,md,mf
+            else if (*flag == 'm' && *(flag + 1) == 'i')
+            {
+                int input = va_arg(args, int);
+                char *result = memory_dump(&input, sizeof(int));
+                if (result == NULL)
                 {
                     fprintf(file, "error memory malloc");
                 }
                 else
                 {
-                    fprintf(file, "%s", decimal);
+                    fprintf(file, "%s", result);
+                    free(result);
                 }
-
+                flag++;
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'u')
+            {
+                unsigned int input = va_arg(args, unsigned int);
+                char *result = memory_dump(&input, sizeof(unsigned int));
+                if (result == NULL)
+                {
+                    fprintf(file, "error memory malloc");
+                }
+                else
+                {
+                    fprintf(file, "%s", result);
+                    free(result);
+                }
+                flag++;
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'f')
+            {
+                float input = va_arg(args, double);
+                char *result = memory_dump(&input, sizeof(float));
+                if (result == NULL)
+                {
+                    fprintf(file, "error memory malloc");
+                }
+                else
+                {
+                    fprintf(file, "%s", result);
+                    free(result);
+                }
+                flag++;
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'd')
+            {
+                double input = va_arg(args, double);
+                char *result = memory_dump(&input, sizeof(double));
+                if (result == NULL)
+                {
+                    fprintf(file, "error memory malloc");
+                }
+                else
+                {
+                    fprintf(file, "%s", result);
+                    free(result);
+                }
                 flag++;
             }
         }
@@ -298,3 +437,4 @@ int overfprintf(FILE *file, const char *flag, ...)
 
     va_end(args);
 }
+
