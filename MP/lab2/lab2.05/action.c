@@ -10,6 +10,7 @@ char *in_roman_numerals(int number)
     {
         return NULL;
     }
+    roman[0] = '\0';
     while (number > 0)
     {
         if (number >= regular_numbers[position])
@@ -106,11 +107,9 @@ char *representation_at_base(int number, int base)
         size = 2;
     }
     else
-
     {
         size += log(number) / log(base) + 1;
     }
-
     char *result = (char *)malloc(sizeof(char) * (size + 1));
     if (result == NULL)
     {
@@ -170,6 +169,7 @@ char *conversion_to_decimal(char *number, int base)
         return NULL;
     }
     snprintf(result, size + 1, "%d", decimal);
+
     return result;
 }
 //%m...
@@ -200,7 +200,6 @@ char *memory_dump(void *number, int size)
     result[position] = '\0';
     return result;
 }
-
 int overfprintf(FILE *file, const char *flag, ...)
 {
     va_list args;
@@ -231,7 +230,6 @@ int overfprintf(FILE *file, const char *flag, ...)
                     fprintf(file, "%s", roman);
                     free(roman);
                 }
-
                 flag++;
             }
             //%Zr
@@ -309,7 +307,6 @@ int overfprintf(FILE *file, const char *flag, ...)
                 {
                     fprintf(file, "incorrect data");
                 }
-
                 if (islower(*input))
                 {
 
@@ -328,7 +325,6 @@ int overfprintf(FILE *file, const char *flag, ...)
                 {
                     fprintf(file, "incorrect data");
                 }
-
                 flag++;
             }
 
@@ -363,7 +359,6 @@ int overfprintf(FILE *file, const char *flag, ...)
                 {
                     fprintf(file, "incorrect data");
                 }
-
                 flag++;
             }
             //%mi,mu,md,mf
@@ -434,7 +429,312 @@ int overfprintf(FILE *file, const char *flag, ...)
         }
         flag++;
     }
-
     va_end(args);
 }
+char *oversprintf(char *str, size_t size, const char *flag, ...)
+{
+    va_list args;
+    va_start(args, flag);
+    size_t used = 0;
 
+    if (used >= size)
+    {
+        va_end(args);
+        return NULL;
+    }
+
+    while (*flag != '\0')
+    {
+        if (*flag == '%')
+        {
+            flag++;
+            if (*flag == 'R' && *(flag + 1) == 'o')
+            {
+                int input = va_arg(args, int);
+                if (input > 3999 || input < 1)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "incorrect data", size - used - 1);
+                        used += strlen("incorrect data");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    char *roman = in_roman_numerals(input);
+                    if (roman == NULL)
+                    {
+                        if (used < size - 1)
+                        {
+                            strncat(str, "error memory malloc", size - used - 1);
+                            used += strlen("error memory malloc");
+                        }
+                        else
+                        {
+                            va_end(args);
+                            return NULL;
+                        }
+                    }
+                    else
+                    {
+                        strncat(str, roman, size - used - 1);
+                        used += strlen(roman);
+                        free(roman);
+                    }
+                }
+            }
+            else if (*flag == 'Z' && *(flag + 1) == 'r')
+            {
+                unsigned int input = va_arg(args, unsigned int);
+                char *zeckendorf = Zeckendorf_representation(input);
+                if (zeckendorf == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, zeckendorf, size - used - 1);
+                    used += strlen(zeckendorf);
+                    free(zeckendorf);
+                }
+            }
+            else if (*flag == 'C' && *(flag + 1) == 'v')
+            {
+                int input = va_arg(args, int);
+                int base = va_arg(args, int);
+                if (base < 2 || base > 36)
+                {
+                    base = 10;
+                }
+                char *representation = representation_at_base(input, base);
+                if (representation == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    for (int i = 0; representation[i]; i++)
+                    {
+                        representation[i] = tolower(representation[i]); // Приводим символы к нижнему регистру
+                    }
+                    strncat(str, representation, size - used - 1);
+                    used += strlen(representation);
+                    free(representation);
+                }
+            }
+            else if (*flag == 'C' && *(flag + 1) == 'V')
+            {
+                int input = va_arg(args, int);
+                int base = va_arg(args, int);
+                if (base < 2 || base > 36)
+                {
+                    base = 10;
+                }
+                char *representation = representation_at_base(input, base);
+                if (representation == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, representation, size - used - 1);
+                    used += strlen(representation);
+                    free(representation);
+                }
+            }
+            else if (*flag == 't' && *(flag + 1) == 'o')
+            {
+                char *input = va_arg(args, char *);
+                int base = va_arg(args, int);
+                if (base < 2 || base > 36)
+                {
+                    base = 10;
+                }
+                if (input == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "incorrect data", size - used - 1);
+                        used += strlen("incorrect data");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+
+                if (islower(*input))
+                {
+                    char *decimal = conversion_to_decimal(input, base);
+                    if (decimal == NULL)
+                    {
+                        if (used < size - 1)
+                        {
+                            strncat(str, "error memory malloc", size - used - 1);
+                            used += strlen("error memory malloc");
+                        }
+                        else
+                        {
+                            va_end(args);
+                            return NULL;
+                        }
+                    }
+                    else
+                    {
+                        strncat(str, decimal, size - used - 1);
+                        used += strlen(decimal);
+                        free(decimal);
+                    }
+                }
+
+                else
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "incorrect data", size - used - 1);
+                        used += strlen("incorrect data");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+            }
+            else if (*flag == 'T' && *(flag + 1) == 'O')
+            {
+                char *input = va_arg(args, char *);
+                int base = va_arg(args, int);
+                if (base < 2 || base > 36)
+                {
+                    base = 10;
+                }
+                if (input == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "incorrect data", size - used - 1);
+                        used += strlen("incorrect data");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+
+                if (!islower(*input))
+                {
+                    char *decimal = conversion_to_decimal(input, base);
+                    if (decimal == NULL)
+                    {
+                        if (used < size - 1)
+                        {
+                            strncat(str, "error memory malloc", size - used - 1);
+                            used += strlen("error memory malloc");
+                        }
+                        else
+                        {
+                            va_end(args);
+                            return NULL;
+                        }
+                    }
+                    else
+                    {
+                        strncat(str, decimal, size - used - 1);
+                        used += strlen(decimal);
+                        free(decimal);
+                    }
+                }
+                else
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "incorrect data", size - used - 1);
+                        used += strlen("incorrect data");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'i')
+            {
+                int input = va_arg(args, int);
+                char *result = memory_dump(&input, sizeof(int));
+                if (result == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, result, size - used - 1);
+                    used += strlen(result);
+                    free(result);
+                }
+            }
+            flag += 2;
+        }
+        else
+        {
+            if (used < size - 1)
+            {
+                str[used] = *flag;
+                str[used + 1] = '\0';
+                used++;
+            }
+            else
+            {
+                va_end(args);
+                return NULL;
+            }
+            flag++;
+        }
+    }
+    va_end(args);
+    return str;
+}

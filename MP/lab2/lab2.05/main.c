@@ -32,13 +32,108 @@ int main(int argc, char *argv[])
     // 10. %md –  печать дампа значений в системе счисления с основанием 2 для float
     overfprintf(file, "10. memory dump double ---> %md\n", 5.0);
     fclose(file);
+    // 2.
+    size_t size = 1024;
+    char *str = (char *)malloc(size * sizeof(char));
 
-    //  char *str = (char *)malloc(BUFSIZ * sizeof(char));
-    //   oversprintf(str, "1. 21 in ---> %Ro\n", 21);
-    //  oversprintf(str, "1. 21 in ---> %Zr\n", (unsigned int)21);
+    if (str == NULL)
+    {
+        printf("malloc memory error\n");
+        return 1;
+    }
+    char *result = oversprintf(str, size, "1. 21 in Roman numerals ---> %Ro\n", 21);
 
-    // printf("%s\n", str);
-    // free(str);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "2. 21 Zeckendorf representation ---> %Zr\n", (unsigned int)21);
+
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "3. 175 in 16 number system ---> %Cv\n", 175, 16);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "4. -175 in 16 number system ---> %CV\n", -175, 16);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "5. af in 10 number system ---> %to\n", "af", 16);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size,  "6. AB in 10 number system ---> %TO\n", "AB", 16);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "7. memory dump int ---> %mi\n", 40);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "8. memory dump unsigned int ---> %mu\n", (unsigned int)40);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "9. memory dump float ---> %mf\n", 4.0);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    result = oversprintf(str, size, "10. memory dump double ---> %md\n", 5.0);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
+    free(str);
 
     printf("\n\nM8O-211B-22  Mashrabova  lab2 tack5\n");
     return 0;
