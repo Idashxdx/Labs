@@ -172,25 +172,25 @@ char *conversion_to_decimal(char *number, int base)
 
     return result;
 }
-//%m...
-char *memory_dump(void *number, int size)
+//%m... - план - извлекаем каждый бит - преобразуем бит в 0 или 1- записываем в результат добавляем пробел и переходим к следующему байту
+char *memory_dump_int(int number, int size)
 {
-    size_t binary_size = size * 9; // 8 бит на каждый байт +1 на пробел
-    char *result = (char *)malloc(sizeof(char) * binary_size);
+    size_t binary_size = size * 8 + size;
+    char *result = (char *)malloc(sizeof(char) * (binary_size + 1));
     if (result == NULL)
     {
         return NULL;
     }
-    char *byte = (char *)number; // указатель на байт
+
+    char *byte = (char *)&number; // указатель на байт
+
     int position = 0;
-    //- план - извлекаем каждый бит - преобразуем бит в 0 или 1- записываем в результат
-    // добавляем пробел и переходим к следующему байту
     for (int i = 0; i < size; i++)
     {
         for (int j = 7; j >= 0; j--)
         {
             char bit = ((*byte) >> j) & 1;
-            result[position] = ((int)bit) + '0';
+            result[position] = '0' + bit; // Чтобы получить символ '0' или '1'
             position++;
         }
         result[position] = ' ';
@@ -198,6 +198,84 @@ char *memory_dump(void *number, int size)
         byte++;
     }
     result[position] = '\0';
+
+    return result;
+}
+char *memory_dump_unsigned(unsigned int number, int size)
+{
+    size_t binary_size = size * 8 + size;
+    char *result = (char *)malloc(sizeof(char) * (binary_size + 1)); // +1 для завершающего нуля
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    int position = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 7; j >= 0; j--)
+        {
+            char bit = (number >> j) & 1;
+            result[position] = '0' + bit;
+            position++;
+        }
+        result[position] = ' ';
+        position++;
+        number = number >> 8;
+    }
+    result[position] = '\0';
+
+    return result;
+}
+char *memory_dump_double(double number, int size)
+{
+    unsigned char *bytePtr = (unsigned char *)&number;
+    size_t binary_size = size * 8 + size;
+    char *result = (char *)malloc(sizeof(char) * (binary_size + 1));
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    int position = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 7; j >= 0; j--)
+        {
+            char bit = (bytePtr[i] >> j) & 1;
+            result[position] = '0' + bit; // Чтобы получить символ '0' или '1'
+            position++;
+        }
+        result[position] = ' ';
+        position++;
+    }
+    result[position] = '\0';
+    return result;
+}
+char *memory_dump_float(float number, int size)
+{
+    unsigned char *bytePtr = (unsigned char *)&number;
+    size_t binary_size = size * 8 + size;
+    char *result = (char *)malloc(sizeof(char) * (binary_size + 1)); // +1 для завершающего нуля
+    if (result == NULL)
+    {
+        return NULL;
+    }
+
+    int position = 0;
+    for (int i = 0; i < size; i++)
+    {
+        for (int j = 7; j >= 0; j--)
+        {
+            char bit = (bytePtr[i] >> j) & 1;
+            result[position] = '0' + bit; // Чтобы получить символ '0' или '1'
+            position++;
+        }
+        result[position] = ' ';
+        position++;
+    }
+    result[position] = '\0'; // Добавляем завершающий нуль
+
     return result;
 }
 int overfprintf(FILE *file, const char *flag, ...)
@@ -365,7 +443,7 @@ int overfprintf(FILE *file, const char *flag, ...)
             else if (*flag == 'm' && *(flag + 1) == 'i')
             {
                 int input = va_arg(args, int);
-                char *result = memory_dump(&input, sizeof(int));
+                char *result = memory_dump_int(input, sizeof(int));
                 if (result == NULL)
                 {
                     fprintf(file, "error memory malloc");
@@ -380,7 +458,7 @@ int overfprintf(FILE *file, const char *flag, ...)
             else if (*flag == 'm' && *(flag + 1) == 'u')
             {
                 unsigned int input = va_arg(args, unsigned int);
-                char *result = memory_dump(&input, sizeof(unsigned int));
+                char *result = memory_dump_unsigned(input, sizeof(unsigned int));
                 if (result == NULL)
                 {
                     fprintf(file, "error memory malloc");
@@ -394,8 +472,8 @@ int overfprintf(FILE *file, const char *flag, ...)
             }
             else if (*flag == 'm' && *(flag + 1) == 'f')
             {
-                float input = va_arg(args, double);
-                char *result = memory_dump(&input, sizeof(float));
+                float input = (float)va_arg(args, double);
+                char *result = memory_dump_float(input, sizeof(float));
                 if (result == NULL)
                 {
                     fprintf(file, "error memory malloc");
@@ -410,7 +488,7 @@ int overfprintf(FILE *file, const char *flag, ...)
             else if (*flag == 'm' && *(flag + 1) == 'd')
             {
                 double input = va_arg(args, double);
-                char *result = memory_dump(&input, sizeof(double));
+                char *result = memory_dump_double(input, sizeof(double));
                 if (result == NULL)
                 {
                     fprintf(file, "error memory malloc");
@@ -696,7 +774,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
             else if (*flag == 'm' && *(flag + 1) == 'i')
             {
                 int input = va_arg(args, int);
-                char *result = memory_dump(&input, sizeof(int));
+                char *result = memory_dump_int(input, sizeof(int));
                 if (result == NULL)
                 {
                     if (used < size - 1)
@@ -717,6 +795,79 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     free(result);
                 }
             }
+            else if (*flag == 'm' && *(flag + 1) == 'u')
+            {
+                unsigned int input = va_arg(args, unsigned int);
+                char *result = memory_dump_unsigned(input, sizeof(unsigned int));
+                if (result == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, result, size - used - 1);
+                    used += strlen(result);
+                    free(result);
+                }
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'f')
+            {
+                float input = (float)va_arg(args, double);
+                char *result = memory_dump_float(input, sizeof(float));
+                if (result == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, result, size - used - 1);
+                    used += strlen(result);
+                    free(result);
+                }
+            }
+            else if (*flag == 'm' && *(flag + 1) == 'd')
+            {
+                double input = va_arg(args, double);
+                char *result = memory_dump_double(input, sizeof(double));
+                if (result == NULL)
+                {
+                    if (used < size - 1)
+                    {
+                        strncat(str, "error memory malloc", size - used - 1);
+                        used += strlen("error memory malloc");
+                    }
+                    else
+                    {
+                        va_end(args);
+                        return NULL;
+                    }
+                }
+                else
+                {
+                    strncat(str, result, size - used - 1);
+                    used += strlen(result);
+                    free(result);
+                }
+            }
+
             flag += 2;
         }
         else

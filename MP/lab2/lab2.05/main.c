@@ -24,13 +24,13 @@ int main(int argc, char *argv[])
     // 6. %TO –  печать целого числа в сс с основанием 10 - верхний регистр
     overfprintf(file, "6. AB in 10 number system ---> %TO\n", "AB", 16);
     // 7. %mi –  печать дампа значений в системе счисления с основанием 2 для int
-    overfprintf(file, "7. memory dump int ---> %mi\n", 40);
+    overfprintf(file, "7. memory dump int ---> %mi\n", -40);
     // 8. %mu –  печать дампа значений в системе счисления с основанием 2 для unsigned int
     overfprintf(file, "8. memory dump unsigned int ---> %mu\n", (unsigned int)40);
     // 9. %mf –  печать дампа значений в системе счисления с основанием 2 для double
-    overfprintf(file, "9. memory dump float ---> %mf\n", 4.0);
+    overfprintf(file, "9. memory dump float ---> %mf\n", 4.2);
     // 10. %md –  печать дампа значений в системе счисления с основанием 2 для float
-    overfprintf(file, "10. memory dump double ---> %md\n", 5.0);
+    overfprintf(file, "10. memory dump double ---> %md\n", 4.2);
     fclose(file);
     // 2.
     size_t size = 1024;
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", result);
     }
-    result = oversprintf(str, size, "7. memory dump int ---> %mi\n", 40);
+    result = oversprintf(str, size, "7. memory dump int ---> %mi\n", -40);
     if (result == NULL)
     {
         printf("String formatting error or buffer full\n");
@@ -115,7 +115,7 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", result);
     }
-    result = oversprintf(str, size, "9. memory dump float ---> %mf\n", 4.0);
+    result = oversprintf(str, size, "9. memory dump float ---> %mf\n", 4.2);
     if (result == NULL)
     {
         printf("String formatting error or buffer full\n");
@@ -124,7 +124,7 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", result);
     }
-    result = oversprintf(str, size, "10. memory dump double ---> %md\n", 5.0);
+    result = oversprintf(str, size, "10. memory dump double ---> %md\n", 4.2);
     if (result == NULL)
     {
         printf("String formatting error or buffer full\n");

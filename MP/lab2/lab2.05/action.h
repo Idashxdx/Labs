@@ -15,7 +15,9 @@ char *in_roman_numerals(int nember);
 char *Zeckendorf_representation(unsigned int number);
 char *representation_at_base(int number,int base);
 char* conversion_to_decimal(char *number, int base);
-char* memory_dump(void *number, int size);
+char* memory_dump_int(int number, int size);
+char *memory_dump_unsigned(unsigned int number, int size);
+char *memory_dump_double(double number, int size);
 int overfprintf(FILE* file, const char* flag, ...);
 char* oversprintf(char* str, size_t size,const char *flag, ...);
 

@@ -1,5 +1,5 @@
 # Лабораторная работа 2, Задача 5
-в процессе - overfprintf - готово, осталось oversprintf- mi..mf - аварийная остановка??
+
 Запуск: gcc main.c action.c -lm  
 ./a.out  
 
