@@ -3,6 +3,7 @@
 #include <pthread.h>
 #include <unistd.h>
 #include <semaphore.h>
+#include <stdint.h>
 
 #define COUNT_PHILOS 5
 
@@ -41,7 +42,7 @@ int main(void)
     }
     for (int i = 1; i <= COUNT_PHILOS; i++)
     {
-        pthread_create(&philosopher[i], NULL, (void *)philosopher_lunch, (void *)(intptr_t)i); // создание,запуск потока
+       pthread_create(&philosopher[i], NULL, (void *)philosopher_lunch, (void *)(intptr_t)i); // создание,запуск потока
     }
     for (int i = 1; i <= COUNT_PHILOS; i++)
     {
