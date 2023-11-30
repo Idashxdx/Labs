@@ -12,6 +12,7 @@
         "types.h": "c",
         "wait.h": "c",
         "pthread.h": "c",
-        "semaphore.h": "c"
+        "semaphore.h": "c",
+        "typeinfo": "c"
     }
 }
