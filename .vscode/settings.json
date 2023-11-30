@@ -14,5 +14,6 @@
         "pthread.h": "c",
         "semaphore.h": "c",
         "typeinfo": "c"
-    }
+    },
+    "C_Cpp.errorSquiggles": "disabled"
 }
