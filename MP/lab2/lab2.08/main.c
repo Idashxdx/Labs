@@ -6,18 +6,18 @@ int main(int argc, char *argv[])
     // в заданной сс с основанием [2..36]. Параметрами функции являются основание сс,
     // количество переданных чисел, строковые представления чисел в заданной сс.
     // также реализуйте функцию «сложения в столбик» двух чисел в заданной сс.
-    char *result;
-    
-    switch (sum(&result,16,3,"ABC", "A9C", "F000C"))//основание-количество-числа
+    char *result = NULL;
+
+    switch (sum(&result, 10, 3, "1000", "100", "10")) // основание-количество-числа
     {
     case correct_data:
-
+        printf("Result ---> %s\n", result);
         break;
     case incorrect_data:
         printf("Calculation error\n");
         break;
-    case overflow_data:
-        printf("Overflow\n");
+    case malloc_memory_error:
+        printf("memory malloc error\n");
         break;
     }
 
