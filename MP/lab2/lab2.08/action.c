@@ -1,24 +1,23 @@
 #include "action.h"
-
-bool check_number(char *str, int base)
+bool check_number(const char *str, int base)
 {
-    int lenght = strlen(str);
+    size_t length = strlen(str);
 
-    if (!lenght)
+    if (length == 0)
     {
         return false;
     }
 
-    for (int i = 0; i < lenght; ++i)
+    for (size_t i = 0; i < length; ++i)
     {
-        if (!isalpha(str[i]) && !isdigit(str[i]))
+        if (!isalnum(str[i]))
         {
             return false;
         }
 
-        else if (isalpha(str[i]))
+        if (isalpha(str[i]))
         {
-            if (toupper(str[i]) - 55 >= base)
+            if (toupper(str[i]) - 'A' + 10 >= base)
             {
                 return false;
             }
@@ -34,34 +33,51 @@ bool check_number(char *str, int base)
     return true;
 }
 
-char *sum_of_two_numbers(char *a, char *b, int base)
+char *sum_of_two_numbers(const char *number1, const char *number2, int base)
 {
-    int len_a = 0;
-    while (a[len_a] != '\0') {
-        len_a++;
+    size_t length1 = strlen(number1);
+    size_t length2 = strlen(number2);
+    size_t max_lenght = (length1 > length2) ? length1 : length2;
+    char *result = (char *)malloc((max_lenght + 2) * sizeof(char));
+    if (result == NULL)
+    {
+        return NULL;
     }
-    int len_b = 0;
-    while (b[len_b] != '\0') {
-        len_b++;
-    }
-    int max_len = (len_a > len_b) ? len_a : len_b;
-    char* result = (char*)malloc((max_len + 2) * sizeof(char));
+    // план - значение для переноса, с конца идем к первому, записываем остаток от деления на основание, преобразуем в char
     int carry = 0;
-    int i = 0;
-    while (len_a > 0 || len_b > 0 || carry > 0) {
+    for (size_t i = 0; i <= max_lenght; i++)
+    {
         int sum = carry;
-        if (len_a > 0) {
-            sum += a[--len_a] - '0';
+        if (length1 > 0)
+        {
+            sum += number1[length1 - 1] - '0'; // Преобразуем символ --> значение
+            length1--;
         }
-        if (len_b > 0) {
-            sum += b[--len_b] - '0';
+        if (length2 > 0)
+        {
+            sum += number2[length2 - 1] - '0';
+            length2--;
         }
-        result[max_len - i] = (sum % base) + '0';
+        result[max_lenght - i] = (sum % base) + '0';
         carry = sum / base;
-        i++;
     }
-    result[max_len + 1] = '\0';
-    return &result[max_len - i + 1];
+    result[max_lenght + 1] = '\0';
+    // удаляем ведущие нули если есть
+    char *final_result = result;
+    while (*final_result == '0' && *(final_result + 1) != '\0')
+    {
+        final_result++;
+    }
+    //
+    char *copy_final_result = (char *)malloc((strlen(final_result) + 1) * sizeof(char));
+    if (copy_final_result == NULL)
+    {
+        free(result);
+        return NULL;
+    }
+    strcpy(copy_final_result, final_result);
+    free(result);
+    return copy_final_result;
 }
 check_data sum(char **result, int base, int count, ...)
 {
@@ -71,39 +87,40 @@ check_data sum(char **result, int base, int count, ...)
     }
     va_list args;
     va_start(args, count);
-    char *tmp;
-    (*result) = (char *)malloc(2 * sizeof(char));
 
+    const char *tmp = va_arg(args, const char *);
+    if (!check_number(tmp, base))
+    {
+        va_end(args);
+        return incorrect_data;
+    }
+
+    *result = (char *)malloc((strlen(tmp) + 1) * sizeof(char));
     if (*result == NULL)
     {
+        va_end(args);
         return malloc_memory_error;
     }
-    *result = va_arg(args, char *);
-     if (!check_number(*result, base))
-        {
-            va_end(args);
-            free(*result);
-            return incorrect_data;
-        }
-    // проверка числа
-    for (int i = 0; i < count; i++)
+    strcpy(*result, tmp);
+
+    for (int i = 1; i < count; i++)
     {
-        char *number = va_arg(args, char *);
+        const char *number = va_arg(args, const char *);
         if (!check_number(number, base))
         {
             va_end(args);
             free(*result);
             return incorrect_data;
         }
-        tmp = sum_of_two_numbers(*result, number, base);
-        if (tmp == NULL)
+        char *tmp_result = sum_of_two_numbers(*result, number, base);
+        if (tmp_result == NULL)
         {
             va_end(args);
             free(*result);
             return malloc_memory_error;
         }
         free(*result);
-        *result = tmp;
+        *result = tmp_result;
     }
     va_end(args);
     return correct_data;

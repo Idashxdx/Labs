@@ -7,8 +7,7 @@ int main(int argc, char *argv[])
     // количество переданных чисел, строковые представления чисел в заданной сс.
     // также реализуйте функцию «сложения в столбик» двух чисел в заданной сс.
     char *result = NULL;
-
-    switch (sum(&result, 10, 3, "1000", "100", "10")) // основание-количество-числа
+    switch (sum(&result, 8, 3, "71", "23", "11")) // основание-количество-числа
     {
     case correct_data:
         printf("Result ---> %s\n", result);
@@ -19,6 +18,10 @@ int main(int argc, char *argv[])
     case malloc_memory_error:
         printf("memory malloc error\n");
         break;
+    }
+    if (result != NULL)
+    {
+        free(result);
     }
 
     printf("\n\nM8O-211B-22  Mashrabova  lab2 tack8\n");

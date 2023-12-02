@@ -17,7 +17,7 @@ typedef enum check_data
     malloc_memory_error
 } check_data;
 
-bool check_number(char *str, int base);
-char *sum_of_two_numbers(char *number1, char *number2, int base);
+bool check_number(const char *str, int base);
+char *sum_of_two_numbers(const char *a,const char *b, int base);
 check_data sum(char** result, int base, int count, ...);
 #endif
