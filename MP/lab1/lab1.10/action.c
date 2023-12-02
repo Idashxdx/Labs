@@ -10,6 +10,10 @@ check_input_data check_base(int base)
 }
 check_input_data check_number(char *number, int base)
 {
+    if (*number < 0)
+    {
+        *number = -*number;
+    }
     if (*number < '0' || (*number > '9' && *number < 'A') || *number > ('A' + base - 11))
     {
         return incorrect_data;
