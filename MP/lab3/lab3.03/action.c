@@ -20,7 +20,7 @@ check_data read_file(FILE *input_file, employee **empl, int *size_empl)
             return correct_data;
         }
         employee tmp;
-        if (sscanf(line, "%d %s %s %lf", &(tmp.id), tmp.name, tmp.surname, &(tmp.salary))!=4)
+        if (sscanf(line, "%d %s %s %lf", &(tmp.id), tmp.name, tmp.surname, &(tmp.salary)) != 4)
         {
             free(line);
             free(*empl);
@@ -40,27 +40,28 @@ check_data read_file(FILE *input_file, employee **empl, int *size_empl)
             *empl = empl_res;
         }
     }
+    free(line);
     return correct_data;
 }
 int sort_ascending(const void *compare_1, const void *compare_2)
 {
     employee *empl_1 = (employee *)compare_1;
     employee *empl_2 = (employee *)compare_2;
-    if (empl_1->salary - empl_2->salary > EPSILON)
+    if ((empl_1->salary - empl_2->salary) > EPSILON)
     {
         return 1;
     }
-    else if (empl_1->salary - empl_1->salary < EPSILON)
+    else if ((empl_2->salary - empl_1->salary) > EPSILON)
     {
         return -1;
     }
-    int surname_cmp = strcmp(empl_1->surname, empl_2->surname); // сравниваем фамилии
-    if (surname_cmp)
+    int surname_cmp = strcmp(empl_1->surname, empl_2->surname);
+    if (surname_cmp != 0)
     {
         return surname_cmp;
     }
     int name_cmp = strcmp(empl_1->name, empl_2->name);
-    if (name_cmp)
+    if (name_cmp != 0)
     {
         return name_cmp;
     }
@@ -68,25 +69,5 @@ int sort_ascending(const void *compare_1, const void *compare_2)
 }
 int sort_descending(const void *compare_1, const void *compare_2)
 {
-    employee *empl_1 = (employee *)compare_1;
-    employee *empl_2 = (employee *)compare_2;
-    if (empl_1->salary > empl_2->salary)
-    {
-        return -1;
-    }
-    else if (empl_1->salary < empl_1->salary)
-    {
-        return 1;
-    }
-    int surname_cmp = strcmp(empl_1->surname, empl_2->surname);
-    if (surname_cmp)
-    {
-        return -surname_cmp;
-    }
-    int name_cmp = strcmp(empl_1->name, empl_2->name);
-    if (name_cmp)
-    {
-        return -name_cmp;
-    }
-    return -(empl_1->id - empl_2->id);
+    return -sort_ascending(compare_1, compare_2);
 }
