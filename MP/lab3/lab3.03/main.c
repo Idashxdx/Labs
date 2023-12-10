@@ -20,12 +20,18 @@ int main(int argc, char *argv[])
             {
                 char flag = argv[1][1];
                 FILE *input_file;
-                FILE *output_file;
                 input_file = fopen(argv[2], "r");
-                output_file = fopen(argv[3], "w+");
-                if (!input_file || !output_file)
+                if (!input_file)
                 {
-                    printf("File opening error\n");
+                    printf("File 1 opening error\n");
+                    return 1;
+                }
+                FILE *output_file;
+                output_file = fopen(argv[3], "w+");
+                if (!output_file)
+                {
+                    fclose(input_file);
+                    printf("File 2 opening error\n");
                     return 1;
                 }
                 employee *empl;
