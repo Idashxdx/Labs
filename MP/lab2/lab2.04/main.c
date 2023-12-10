@@ -4,17 +4,17 @@ int main(int argc, char *argv[])
 {
     // 1. Функция с переменным числом аргументов, принимающую координаты
     // вершин многоугольника и определяющая, является ли этот многоугольник выпуклым
-    int count = 6;
-    Point point_1 = {1.0, 2.0};
-    Point point_2 = {-1.0, 1.0};
-    Point point_3 = {-1.0, -0.5};
+    int count = 3;
+    Point point_1 = {0, 0};
+    Point point_2 = {1, 1};
+    Point point_3 = {2, 2};
     Point point_4 = {1.0, -2.5};
     Point point_5 = {3.0, -0.5};
     Point point_6 = {3.0, 1.0};
     // 5 точек выше --> 100% выпуклый-гексагон
     //-->невыпуклый --> point_5 {3.0, -0.5} заменить на  {1.0, 1.0}
     bool convex = true;
-    switch (check_convex(&convex, count, point_1, point_2, point_3, point_4, point_5, point_6))
+    switch (check_convex(&convex, count, point_1, point_2, point_3))
     {
     case correct_data:
         if (convex)

@@ -26,6 +26,7 @@ int main(int argc, char *argv[])
     }
     switch (truns_number(&result, number, r))
     {
+        
     case correct_data:
         printf("\nDecimal number = %d; transformation in base 2^%d  --->  %s", number, r, result);
         break;

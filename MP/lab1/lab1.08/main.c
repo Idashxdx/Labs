@@ -80,10 +80,16 @@ int main(int argc, char *argv[])
     else
     {
         FILE *input_file = fopen(argv[1], "r");
-        FILE *output_file = fopen(argv[2], "w");
-        if (!input_file || !output_file)
+        if (!input_file)
         {
-            printf("File opening error\n");
+            printf("File 1 opening error\n");
+            return 1;
+        }
+        FILE *output_file = fopen(argv[2], "w");
+        if (!output_file)
+        {
+            fclose(input_file);
+            printf("File 2 opening error\n");
             return 1;
         }
         char number[100];

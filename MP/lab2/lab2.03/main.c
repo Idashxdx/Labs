@@ -7,7 +7,7 @@ int main(int argc, char *argv[])
     // поиск всех вхождений переданной подстроки в содержимом этого файла.
     //+вывести местонахождение вхождения
 
-    switch (substring_search("shm", 2, "file1.txt", "file2.txt"))
+    switch (substring_search("\n", 2, "file1.txt", "file2.txt"))
     {
     case correct_data:
         break;
