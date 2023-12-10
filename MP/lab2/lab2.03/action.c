@@ -6,6 +6,7 @@ check_data substring_search(const char *str, int count, ...)
     {
         return incorrect_data;
     }
+    
     va_list args;
     va_start(args, count);
     for (int i = 0; i < count; i++)
@@ -31,6 +32,7 @@ check_data substring_search(const char *str, int count, ...)
         // позиция и строка результата
         int str_number = 1;
         int position_number = 1;
+        const char *tab_sequence = "\t";
         // пдлина подстроки и текущей
         size_t substring_length = strlen(str);
         size_t current_position = 0;
@@ -42,11 +44,16 @@ check_data substring_search(const char *str, int count, ...)
                 str_number++;
                 position_number = 1;
             }
+            else if(symbol == tab_sequence[0] && strncmp(tab_sequence, &str[current_position], 1) == 0)
+            {
+                // учитываем табуляцию, увеличиваем позицию на соответствующее количество пробелов
+                position_number += 4; // предполагаем, что каждая табуляция равна 4 пробелам
+            }
             else
             {
-                position_number++;
+                position_number++; // увеличиваем позицию в строке
             }
-            // сравниваем символ с подстрокой,
+            // сравниваем символ с подстрокой
             if (symbol == str[current_position])
             {
                 current_position++;
@@ -63,10 +70,10 @@ check_data substring_search(const char *str, int count, ...)
                     }
                     result = new_result;
                     size = new_size;
-                    int print_resilt = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number - substring_length);
-                    if (print_resilt >= 0)
+                    int print_result = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number - substring_length);
+                    if (print_result >= 0)
                     {
-                        length += print_resilt;
+                        length += print_result;
                     }
                     current_position = 0;
                 }
