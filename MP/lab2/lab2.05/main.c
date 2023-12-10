@@ -10,7 +10,11 @@ int main(int argc, char *argv[])
         printf("Error open file\n");
         return 1;
     }
+    // стандартный флаг
 
+    int stand;
+    overfprintf(file, "n = %n", &stand);
+    overfprintf(file, "%d\n", stand);
     // 1. %Ro – запись в римские;
     overfprintf(file, "1. 21 in Roman numerals ---> %Ro\n", 21);
     // 2. %Zr –  цекендорфова представления (прездставление чисел в сумме)
@@ -88,7 +92,7 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", result);
     }
-    result = oversprintf(str, size,  "6. AB in 10 number system ---> %TO\n", "AB", 16);
+    result = oversprintf(str, size, "6. AB in 10 number system ---> %TO\n", "AB", 16);
     if (result == NULL)
     {
         printf("String formatting error or buffer full\n");
@@ -133,8 +137,17 @@ int main(int argc, char *argv[])
     {
         printf("%s\n", result);
     }
+    result = oversprintf(str, size, "stand %d\n", 2);
+    if (result == NULL)
+    {
+        printf("String formatting error or buffer full\n");
+    }
+    else
+    {
+        printf("%s\n", result);
+    }
     free(str);
 
-    printf("\n\nM8O-211B-22  Mashrabova  lab2 tack5\n");
+    printf("M8O-211B-22  Mashrabova  lab2 tack5\n");
     return 0;
 }

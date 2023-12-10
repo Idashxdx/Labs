@@ -1,3 +1,5 @@
+n = 0
+
 1. 21 in Roman numerals ---> XXI
 2. 21 Zeckendorf representation ---> 10000001
 3. 175 in 16 number system ---> af

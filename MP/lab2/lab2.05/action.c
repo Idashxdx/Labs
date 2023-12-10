@@ -500,6 +500,16 @@ int overfprintf(FILE *file, const char *flag, ...)
                 }
                 flag++;
             }
+            else if (*flag == '%')
+            {
+                fputc('%', file);
+            }
+            else
+            {
+                flag--;
+                vfprintf(file, flag, args);
+                flag++;
+            }
         }
         else
         {
@@ -508,7 +518,9 @@ int overfprintf(FILE *file, const char *flag, ...)
         flag++;
     }
     va_end(args);
+    return 0;
 }
+
 char *oversprintf(char *str, size_t size, const char *flag, ...)
 {
     va_list args;
@@ -565,6 +577,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                         free(roman);
                     }
                 }
+                flag++;
             }
             else if (*flag == 'Z' && *(flag + 1) == 'r')
             {
@@ -589,6 +602,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(zeckendorf);
                     free(zeckendorf);
                 }
+                flag++;
             }
             else if (*flag == 'C' && *(flag + 1) == 'v')
             {
@@ -622,6 +636,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(representation);
                     free(representation);
                 }
+                flag++;
             }
             else if (*flag == 'C' && *(flag + 1) == 'V')
             {
@@ -651,6 +666,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(representation);
                     free(representation);
                 }
+                flag++;
             }
             else if (*flag == 't' && *(flag + 1) == 'o')
             {
@@ -711,6 +727,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                         return NULL;
                     }
                 }
+                flag++;
             }
             else if (*flag == 'T' && *(flag + 1) == 'O')
             {
@@ -770,6 +787,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                         return NULL;
                     }
                 }
+                flag++;
             }
             else if (*flag == 'm' && *(flag + 1) == 'i')
             {
@@ -794,6 +812,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(result);
                     free(result);
                 }
+                flag++;
             }
             else if (*flag == 'm' && *(flag + 1) == 'u')
             {
@@ -818,6 +837,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(result);
                     free(result);
                 }
+                flag++;
             }
             else if (*flag == 'm' && *(flag + 1) == 'f')
             {
@@ -842,6 +862,7 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(result);
                     free(result);
                 }
+                flag++;
             }
             else if (*flag == 'm' && *(flag + 1) == 'd')
             {
@@ -866,9 +887,34 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                     used += strlen(result);
                     free(result);
                 }
+                flag++;
             }
-
-            flag += 2;
+            else if (*flag == '%')
+            {
+                if (used < size - 1)
+                {
+                    str[used] = *flag;
+                    str[used + 1] = '\0';
+                    used++;
+                }
+                else
+                {
+                    va_end(args);
+                    return NULL;
+                }
+            }
+            else
+            {
+                flag--;
+                int written = vsnprintf(str + used, size - used, flag, args);
+                if (written < 0 || written >= size - used)
+                {
+                    va_end(args);
+                    return NULL;
+                }
+                used += written;
+                flag++;
+            }
         }
         else
         {
@@ -883,8 +929,8 @@ char *oversprintf(char *str, size_t size, const char *flag, ...)
                 va_end(args);
                 return NULL;
             }
-            flag++;
         }
+        flag++;
     }
     va_end(args);
     return str;
