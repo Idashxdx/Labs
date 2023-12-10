@@ -12,6 +12,15 @@ check_data check_convex(bool *convex, int count, ...)
     Point one = va_arg(args, Point);
     Point two = va_arg(args, Point);
     Point three = va_arg(args, Point);
+    double cross_product = (two.x - one.x) * (three.y - one.y) - (three.x - one.x) * (two.y - one.y);
+    bool is_collinear = (cross_product == 0); // добавим проверку на коллинеарность
+
+    if (is_collinear) // если точки коллинеарны, значит многоугольник невыпуклый
+    {
+        va_end(args);
+        *convex = false;
+        return correct_data;
+    }
     Point vector_1;
     Point vector_2;
     int first_product = 0;
