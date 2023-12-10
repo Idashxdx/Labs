@@ -58,6 +58,11 @@ int find_max_number(int number_1, int number_2)
 }
 void print_delete_zeros(int max_number, int base)
 {
+    if (max_number == 0)
+    {
+        printf("0\n");
+        return;
+    }
     char result_abs[100];
     if (max_number < 0)
     {
@@ -86,6 +91,11 @@ void print_delete_zeros(int max_number, int base)
 }
 void representation_at_base(int max_number, int base)
 {
+    if (max_number == 0)
+    {
+        printf("\n Представление с основанием %d: 0\n", base);
+        return;
+    }
     char result[100];
     int position = 0;
     int is_negative = 0;

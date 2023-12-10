@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
         int number_18 = 0;
         int number_27 = 0;
         int number_36 = 0;
+        int input_count = 0;
         while (1)
         {
             printf("\nВведите число в CC с основанием %d (введите 'Stop' для окончания ввода): ", base);
@@ -25,13 +26,31 @@ int main(int argc, char *argv[])
 
             if (strcmp(number, "Stop") == 0)
             {
-                break;
+                if (input_count == 0)
+                {
+                    printf("Числа не были введены\n");
+                    return 1;
+                }
+                else
+                {
+                    break;
+                }
             }
             switch (check_number(number, base))
             {
             case correct_data:
-                long long current = conversion_to_decimal(number, base);
-                max_number = find_max_number(max_number, current);
+                if (strcmp(number, "0") == 0)
+                {
+                    input_count++;
+                    long long current = 0;
+                    max_number = find_max_number(max_number, current);
+                }
+                else
+                {
+                    input_count++;
+                    long long current = conversion_to_decimal(number, base);
+                    max_number = find_max_number(max_number, current);
+                }
                 break;
 
             case incorrect_data:
