@@ -1,7 +1,7 @@
 #include "action.h"
 // сдвиг влево и вправо (<< и >>), дополнения до единицы: ~
 // возвращаем символ указанной позиции в заданной сс(отстаток от деления и база)
-char get_symbols_for_base(int value, int base) 
+char get_symbols_for_base(int value, int base)
 {
     if (value >= 0 && value < base)
     {
@@ -42,6 +42,17 @@ int negative(int a)
 }
 check_data truns_number(char **result, int number, int r)
 {
+    if (number == 0)
+    {
+        *result = (char *)malloc(2 * sizeof(char)); //  само число и завершающий ноль
+        if (*result == NULL)
+        {
+            return memory_malloc_error;
+        }
+        (*result)[0] = '0';
+        (*result)[1] = '\0';
+        return correct_data;
+    }
     int base = 1 << r; // вычисляем основания для преобразования
     int valume = 32;
     int size = 0;
@@ -79,7 +90,7 @@ check_data truns_number(char **result, int number, int r)
     }
 
     (*result)[size] = '\0';
-    char *tmp = (char *)realloc(*result, size + 1); //обрезаем размер буфера до необходимого
+    char *tmp = (char *)realloc(*result, size + 1); // обрезаем размер буфера до необходимого
     if (tmp == NULL)
     {
         free(*result);
