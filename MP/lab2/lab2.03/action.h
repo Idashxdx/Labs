@@ -7,6 +7,7 @@
 #include <stdarg.h>
 #include <ctype.h>
 #include <string.h>
+#include <stdbool.h>
 
 // проверка
 typedef enum check_data
