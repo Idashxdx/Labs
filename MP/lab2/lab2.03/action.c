@@ -1,6 +1,5 @@
 
 #include "action.h"
-
 check_data substring_search(const char *str, int count, ...)
 {
     if (count < 1)
@@ -48,6 +47,15 @@ check_data substring_search(const char *str, int count, ...)
             {
                 position_number++; // увеличиваем позицию в строке
             }
+
+
+
+
+// и так -если \t используется с чем нибудь - то поиск происходит нормально, если таб один - то результат не правильный - выдает все не пустые позиции в файле - исправить
+         
+         
+         
+         
             // сравниваем символ с подстрокой
             if (symbol == str[current_position] || (str[current_position] == '\t'))
             {
