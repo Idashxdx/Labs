@@ -1,5 +1,6 @@
 
 #include "action.h"
+
 check_data substring_search(const char *str, int count, ...)
 {
     if (count < 1)
@@ -47,7 +48,6 @@ check_data substring_search(const char *str, int count, ...)
             {
                 position_number++; // увеличиваем позицию в строке
             }
-
             // сравниваем символ с подстрокой
             if (symbol == str[current_position] || (str[current_position] == '\t'))
             {
