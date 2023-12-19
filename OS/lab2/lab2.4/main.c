@@ -34,10 +34,10 @@ void search_str_in_file(const char *filename, const char *str)
 
 int main(int argc, char *argv[])
 {
-    printf("M8O-211B-22  Mashrabova OS lab2 tack4\n\n\n");
+    printf("M8O-211B-22  Mashrabova OS lab2 tack4\n\n");
     if (argc != 3)
     {
-        printf("Enter file list and string");
+        printf("Enter file list and string \n");
         return 1;
     }
 
