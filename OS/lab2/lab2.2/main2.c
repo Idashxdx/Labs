@@ -6,10 +6,9 @@
 int main()
 {
     fork();
-    printf("Hi\n");
+    printf("Hi");
     fork();
-    printf("Hi\n");
-    printf("\n\nM8O-211B-22  Mashrabova OS lab2 tack2.2\n");
+    printf("Hi");
     return 0;
 }
 //создается дочерний процесс

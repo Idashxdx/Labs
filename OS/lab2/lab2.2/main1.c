@@ -8,7 +8,6 @@ int main()
     int pid;
     pid = fork();
     printf("%d\n", pid);
-    printf("\n\nM8O-211B-22  Mashrabova OS lab2 tack2.1\n");
     return 0;
 }
 //создается дочерний процесс
