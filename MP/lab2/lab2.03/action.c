@@ -18,6 +18,7 @@ check_data substring_search(const char *str, int count, ...)
             va_end(args);
             return incorrect_file;
         }
+
         int symbol;
         char *result = (char *)malloc(count * sizeof(char));
         if (result == NULL)
@@ -26,71 +27,86 @@ check_data substring_search(const char *str, int count, ...)
             fclose(file);
             return malloc_memory_error;
         }
-        // размер и длина результата
+
         size_t size = 0;
         size_t length = 0;
-        // позиция и строка результата
         int str_number = 1;
         int position_number = 1;
-        // пдлина подстроки и текущей
         size_t substring_length = strlen(str);
         size_t current_position = 0;
-        while ((symbol = fgetc(file)) != EOF) // читаем по символу из файла
+
+        // Замена символа табуляции на 4 пробела в подстроке
+        size_t len = strlen(str);
+        char *formatted_str = (char *)malloc(len * 4 + 1); // +1 для нулевого символа
+        size_t idx = 0;
+        for (size_t i = 0; i < len; i++)
         {
-            if (symbol == '\n')
+            if (str[i] == '\t')
             {
-                // следующая строка ---> увеличиваем количество строк, позиция в строке опять 1
-                str_number++;
-                position_number = 1;
+                formatted_str[idx++] = ' '; // заменяем табуляцию четырьмя пробелами
+                formatted_str[idx++] = ' ';
+                formatted_str[idx++] = ' ';
+                formatted_str[idx++] = ' ';
+                substring_length +=3;
             }
             else
             {
-                position_number++; // увеличиваем позицию в строке
+                formatted_str[idx++] = str[i];
             }
+        }
+        formatted_str[idx] = '\0';
 
-
-
-
-// и так -если \t используется с чем нибудь - то поиск происходит нормально, если таб один - то результат не правильный - выдает все не пустые позиции в файле - исправить
-         
-         
-         
-         
-            // сравниваем символ с подстрокой
-            if (symbol == str[current_position] || (str[current_position] == '\t'))
+        while ((symbol = fgetc(file)) != EOF)
+        {
+            if (formatted_str[current_position] == symbol)
             {
-
                 current_position++;
-                if (current_position == substring_length) // длина подстроки = длина вхождения ---> вхождение найдено
+                if (formatted_str[current_position] == '\0')
                 {
                     size_t new_size = size + 256;
                     char *new_result = (char *)realloc(result, new_size);
                     if (new_result == NULL)
                     {
+                        free(formatted_str);
                         free(result);
                         va_end(args);
                         fclose(file);
                         return realloc_memory_error;
                     }
                     result = new_result;
-                    size = new_size;
-
-                    int print_result = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number - substring_length);
+                    int print_result = printf("Файл: %s, подстрока: %s, строка: %d, позиция: %ld\n", filename, str, str_number, position_number - substring_length+1);
                     if (print_result >= 0)
                     {
                         length += print_result;
                     }
-
                     current_position = 0;
                 }
             }
             else
             {
-                current_position = 0;
+                if (formatted_str[0] == symbol)
+                {
+                    current_position = 1;
+                }
+                else
+                {
+                    current_position = 0;
+                }
+            }
+            if (symbol == '\n')
+            {
+                str_number++;
+                position_number = 1;
+            }
+            else
+            {
+                position_number++;
             }
         }
-        fclose(file);
+
+        free(formatted_str);
         free(result);
+        fclose(file);
     }
     va_end(args);
     return correct_data;
