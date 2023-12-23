@@ -10,6 +10,15 @@ int main(int argc, char *argv[])
     }
     else
     {
+        FILE *file1 = fopen(argv[1], "wb");
+        if (!file1)
+        {
+            printf("File opening error\n");
+            return 1;
+        }
+        unsigned char bytes[] = {1,1,1,1};
+        fwrite(bytes, sizeof(unsigned char), sizeof(bytes), file1);
+        fclose(file1);
         FILE *file = fopen(argv[1], "rb");
         if (!file)
         {

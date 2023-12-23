@@ -59,23 +59,19 @@ int flag_xor32(FILE *file, int *result)
 }
 int flag_mask(FILE *file, char *hex, int *result)
 {
+    int byte;
     int number;
-    *result = 0;
     sscanf(hex, "%x", &number);
     printf("HEX=%d\n", number);
+    *result = 0;
 
-    int buffer;
-    while (fread(&buffer, sizeof(int), 1, file) == 1)
+    while (fread(&byte, sizeof(int), 1, file))
     {
-        unsigned char *bytes = (unsigned char *)&buffer;
-        for (int i = 0; i < sizeof(int); i++)
+        printf("Byte:\n");
+        printf("%d\n", byte);
+        if (number == byte)
         {
-            printf("Byte: %02x\n", bytes[i]);
-            if (bytes[i] == (number & 0xFF))
-            {
-                (*result)++;
-            }
-            number >>= 8; // сдвигаем маску на 8 бит для сравнения следующего байта
+            (*result)++;
         }
     }
     return (*result);
