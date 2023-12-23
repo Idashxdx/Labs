@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdint.h>
+
 enum check_flag
 {
     is_xor8,
@@ -59,29 +59,26 @@ int flag_xor32(FILE *file, int *result)
 }
 int flag_mask(FILE *file, char *hex, int *result)
 {
-    uint32_t value = (uint32_t)strtoul(hex, NULL, 16);
-    uint32_t byte;
+    int number;
     *result = 0;
+    sscanf(hex, "%x", &number);
+    printf("HEX=%d\n", number);
 
-    while (fread(&byte, sizeof(byte), 1, file) == 1)
+    int buffer;
+    while (fread(&buffer, sizeof(int), 1, file) == 1)
     {
-        unsigned char *maskBytes = (unsigned char *)&value; 
-        unsigned char *valueBytes = (unsigned char *)&byte;
-         int match = 1;
-
-            for (int i = 0; i < sizeof(byte); i++)
+        unsigned char *bytes = (unsigned char *)&buffer;
+        for (int i = 0; i < sizeof(int); i++)
+        {
+            printf("Byte: %02x\n", bytes[i]);
+            if (bytes[i] == (number & 0xFF))
             {
-                if (maskBytes[i] != (valueBytes[i] & maskBytes[i]))
-                {
-                    match = 0;  // Не соответствует маске
-                    break;
-                }
+                (*result)++;
             }
-
-            if (match)
-            {
-                result++;
-            }
+            number >>= 8; // сдвигаем маску на 8 бит для сравнения следующего байта
+        }
     }
+    return (*result);
 }
+
 #endif
