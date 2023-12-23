@@ -6,9 +6,10 @@
 int main()
 {
     fork();
-    printf("Hi");
-    fork();
-    printf("Hi");
+    printf("Hi\n");
+    int id = fork();
+    if (id == 0)
+    printf("Hi\n");
     return 0;
 }
 //создается дочерний процесс
