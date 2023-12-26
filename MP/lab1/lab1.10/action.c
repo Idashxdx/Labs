@@ -10,13 +10,28 @@ check_input_data check_base(int base)
 }
 check_input_data check_number(char *number, int base)
 {
-    if ((*number == '-' && strlen(number) > 1) || (*number >= '0' && *number <= '9') || (*number >= 'A' && *number <= ('A' + base - 11)))
+    int start_position = (*number == '-') ? 1 : 0;
+    for (int i = start_position; i < strlen(number); i++)
     {
-        return correct_data;
+        if (isdigit(number[i]))
+        {
+            if (number[i] - '0' >= base)
+            {
+                return incorrect_data;
+            }
+        }
+        else
+        {
+            if (toupper(number[i]) - 'A' + 10 >= base)
+            {
+                return incorrect_data;
+            }
+        }
     }
-    return incorrect_data;
+
+    return correct_data;
 }
-int conversion_to_decimal(char *number, int base)
+unsigned long long conversion_to_decimal(char *number, int base)
 {
 
     int negative = 1;
@@ -28,7 +43,7 @@ int conversion_to_decimal(char *number, int base)
         start_position = 1;
     }
 
-    int decimal = 0;
+    unsigned long long decimal = 0;
     int digit;
     for (int i = start_position; number[i] != '\0'; i++)
     {
@@ -45,7 +60,7 @@ int conversion_to_decimal(char *number, int base)
     return decimal * negative;
 }
 
-int find_max_number(int number_1, int number_2)
+unsigned long long find_max_number(unsigned long long number_1, unsigned long long number_2)
 {
     if (abs(number_1) > abs(number_2))
     {
@@ -56,7 +71,7 @@ int find_max_number(int number_1, int number_2)
         return number_2;
     }
 }
-void print_delete_zeros(int max_number, int base)
+void print_delete_zeros(unsigned long long max_number, int base)
 {
     if (max_number == 0)
     {
@@ -89,7 +104,7 @@ void print_delete_zeros(int max_number, int base)
     }
     printf("\n");
 }
-void representation_at_base(int max_number, int base)
+void representation_at_base(unsigned long long max_number, int base)
 {
     if (max_number == 0)
     {

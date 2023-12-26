@@ -13,11 +13,11 @@ int main(int argc, char *argv[])
     {
     case correct_data:
         char number[100];
-        int max_number = 0;
-        int number_9 = 0;
-        int number_18 = 0;
-        int number_27 = 0;
-        int number_36 = 0;
+        unsigned long long max_number = 0;
+        unsigned long long number_9 = 0;
+        unsigned long long number_18 = 0;
+        unsigned long long number_27 = 0;
+        unsigned long long number_36 = 0;
         int input_count = 0;
         while (1)
         {
@@ -36,19 +36,25 @@ int main(int argc, char *argv[])
                     break;
                 }
             }
+            if (strlen(number) > MAX_INPUT)
+            {
+                printf("\nВведенное число слишком длинное\n");
+                continue;
+            }
+
             switch (check_number(number, base))
             {
             case correct_data:
                 if (strcmp(number, "0") == 0)
                 {
                     input_count++;
-                    long long current = 0;
+                    unsigned long long current = 0;
                     max_number = find_max_number(max_number, current);
                 }
                 else
                 {
                     input_count++;
-                    long long current = conversion_to_decimal(number, base);
+                    unsigned long long current = conversion_to_decimal(number, base);
                     max_number = find_max_number(max_number, current);
                 }
                 break;
