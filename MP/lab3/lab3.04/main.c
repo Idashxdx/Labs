@@ -107,6 +107,15 @@ int main(int argc, char *argv[])
     clear_string(&str2);
     clear_string(&str3);
     printf("str1,str2,str3 have been cleared\n\n");
+//-------------------------------------------------------------------------------
+// пишем свой адрес, потом команды, добавляем посылку ...
+
+    // TASK 2
+
+
+
+
+
     printf("M8O-211B-22  Mashrabova  lab3 tack4\n");
     return 0;
 }

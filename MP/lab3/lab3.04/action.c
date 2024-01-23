@@ -1,5 +1,5 @@
 #include "action.h"
-
+// TASK 1
 String create_string(const char *input, check_data *status)
 {
     String string;
@@ -103,3 +103,6 @@ void clear_string(String *str)
     str->str = NULL;
     str->length = 0;
 }
+
+//------------------------------------------------------------------------------------------------
+// TASK 2
