@@ -1,29 +1,27 @@
 #include "action.h"
 // TASK 1
-String create_string(const char *input, check_data *status)
+check_data create_string(const char *input, String *str)
 {
-    String string;
     if (input == NULL)
     {
-        string.length = 0;
-        string.str = NULL;
-        *status = correct_data;
+        str->length = 0;
+        str->str = NULL;
+        return correct_data;
     }
     else
     {
-        string.length = strlen(input);
-        string.str = (char *)malloc((string.length + 1) * sizeof(char)); //+1 для \0
-        if (string.str == NULL)
+        str->length = strlen(input);
+        str->str = (char *)malloc((str->length + 1) * sizeof(char)); //+1 для '\0'
+        if (str->str == NULL)
         {
-            *status = memory_alloc_error;
+            return memory_alloc_error;
         }
         else
         {
-            strcpy(string.str, input);
-            *status = correct_data;
+            strcpy(str->str, input);
+            return correct_data;
         }
     }
-    return string;
 }
 int equality(const String str1, const String str2)
 {
@@ -43,7 +41,7 @@ int equality(const String str1, const String str2)
         }
     }
 }
-String copy_string(String *new_str1, const String str2, check_data *status)
+check_data copy_string(String *new_str1, const String str2)
 {
 
     if (new_str1->length < str2.length)
@@ -51,30 +49,25 @@ String copy_string(String *new_str1, const String str2, check_data *status)
         char *tmp = (char *)realloc(new_str1->str, sizeof(char) * (str2.length + 1));
         if (tmp == NULL)
         {
-            *status = memory_alloc_error;
+            return memory_alloc_error;
         }
         new_str1->str = tmp;
     }
-    *status = correct_data;
-
     strcpy(new_str1->str, str2.str);
     new_str1->length = str2.length;
+    return correct_data;
 }
-String copy_to_dinamic_string(const String str1, check_data *status)
+check_data copy_to_dinamic_string(const String str1, String *str2)
 {
 
-    String string;
-    string.str = (char *)malloc((str1.length + 1) * sizeof(char));
-    if (string.str == NULL)
+    str2->str = (char *)malloc((str1.length + 1) * sizeof(char));
+    if (str2->str == NULL)
     {
-        *status = memory_alloc_error;
-        return string;
+        return memory_alloc_error;
     }
-    strcpy(string.str, str1.str);
-    string.length = str1.length;
-
-    *status = correct_data;
-    return string;
+    strcpy(str2->str, str1.str);
+    str2->length = str1.length;
+    return correct_data;
 }
 int compare_string(const String str1, const String str2)
 {
@@ -84,18 +77,17 @@ int compare_string(const String str1, const String str2)
     }
     return strcmp(str1.str, str2.str);
 }
-String concatenation_string(String *new_str1, const String str2, check_data *status)
+check_data concatenation_string(String *new_str1, const String str2)
 {
     char *tmp = (char *)realloc(new_str1->str, sizeof(char) * (new_str1->length + str2.length + 1));
     if (tmp == NULL)
     {
-        *status = memory_alloc_error;
+        return memory_alloc_error;
     }
-     *status = correct_data;
     new_str1->length = new_str1->length + str2.length;
     new_str1->str = tmp;
     strcat(new_str1->str, str2.str);
-    
+    return correct_data;
 }
 void clear_string(String *str)
 {

@@ -5,10 +5,10 @@ int main(int argc, char *argv[])
 
     // TASK 1
     // план: создаем какую нибудь строку и создаем то что добавим(функции). Соединяем(функция). Выводим, чистим память (функция).
-    check_data status1;
+    
     // 1. создания экземпляра типа String
-    String str1 = create_string("qwerty ", &status1);
-    switch (status1)
+    String str1;
+    switch (create_string("qwerty ", &str1))
     {
     case correct_data:
         printf("str1 ---> %s; lenght ---> %d;\n\n", str1.str, str1.length);
@@ -20,9 +20,8 @@ int main(int argc, char *argv[])
         printf("Incorrect data\n");
         return 1;
     }
-    check_data status2;
-    String str2 = create_string("ytrewq", &status2);
-    switch (status2)
+    String str2;
+    switch (create_string("ytrewq", &str2))
     {
     case correct_data:
         printf("str2 ---> %s; lenght ---> %d;\n\n", str2.str, str2.length);
@@ -44,9 +43,7 @@ int main(int argc, char *argv[])
         printf("str1:%s and str2: %s ---> Equivalents\n\n", str1.str, str2.str);
     }
     // 5.копирования содержимого экземпляра типа String в существующий экземпляр типа String
-    check_data status3;
-    copy_string(&str1, str2, &status3);
-    switch (status3)
+    switch (copy_string(&str1, str2))
     {
     case correct_data:
         printf("new str1 after copying str2 to str1 ---> %s;\n\n", str1.str);
@@ -59,9 +56,9 @@ int main(int argc, char *argv[])
         return 1;
     }
     // 6. копирования содержимого экземпляра типа String в новый экземпляр типа String, размещённый в динамической памяти
-    check_data status4;
-    String str3 = copy_to_dinamic_string(str1, &status4);
-    switch (status4)
+    
+    String str3;
+    switch (copy_to_dinamic_string(str1, &str3))
     {
     case correct_data:
         printf("new str3 after copying str1 to dynamic memory ---> %s;\n\n", str3.str);
@@ -88,9 +85,9 @@ int main(int argc, char *argv[])
         printf("str1:%s EQUAL str2: %s\n\n", str1.str, str2.str);
     }
     // 7. конкатенации к содержимому первого экземпляра типа String содержимого второго экземпляра типа String.
-    check_data status5;
-    concatenation_string(&str1, str2, &status5);
-    switch (status5)
+    
+    
+    switch (concatenation_string(&str1, str2))
     {
     case correct_data:
         printf("new str1 after concatenation of str1 and str2 ---> %s;\n\n", str1.str);

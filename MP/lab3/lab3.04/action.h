@@ -21,12 +21,12 @@ typedef struct
     int length;
 } String;
 
-String create_string(const char *input, check_data *status);
+check_data create_string(const char *input, String* str);
 int equality(const String str1, const String str2);
-String copy_string(String *new_str1, const String str2, check_data *status);
-String copy_to_dinamic_string(const String str1, check_data *status);
+check_data copy_string(String *new_str1, const String str2);
+check_data copy_to_dinamic_string(const String str1, String* str2);
 int compare_string(const String str1, const String str2);
-String concatenation_string(String *new_str1, const String str2, check_data *status);
+check_data concatenation_string(String *new_str1, const String str2);
 void clear_string(String *str);
 
 #endif
