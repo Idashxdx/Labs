@@ -115,11 +115,11 @@ int main(int argc, char *argv[])
     char num_house[INPUT];
     check_input("House number (int): ", num_house, INPUT, 1);
     char building[INPUT];
-    check_input("Building (str): ", num_house, INPUT, 0);
+    check_input("Building (str): ", building, INPUT, 0);
     char num_apart[INPUT];
-    check_input("Apartament number (int): ", num_house, INPUT, 1);
+    check_input("Apartament number (int): ", num_apart, INPUT, 1);
     char id_6[INPUT];
-    check_input("Index (int, 6): ", num_house, INPUT, 2);
+    check_input("Index (int, 6): ", id_6, INPUT, 2);
     // добавляем в структуру
     Address post_address;
     switch (create_address(&post_address, city, street, num_house, building, num_apart, id_6))
@@ -133,6 +133,104 @@ int main(int argc, char *argv[])
     default:
         printf("Incorrect data\n");
         return 1;
+    }
+    // меню действий
+    while (1)
+    {
+        char act[INPUT];
+        printf("Choose an action:\n");
+        printf("<add>  - ADD a mail to the post office\n");
+        printf("<delete> - DELETE a mail to the post office\n");
+        printf("<search> - SEARCH by id Mail\n");
+        printf("<sort> - SORT a mail to the post office\n");
+        printf("<time> - SEARCH for mails where delivery time has expired\n");
+        printf("<print> - printing of all delivered\n");
+        printf("<exit> - exit\n\n");
+        printf("ENTER ----> ");
+        scanf("%s", act);
+        if (strcmp(act, "add") == 0)
+        {
+            fgets(act, sizeof(act), stdin);
+            printf("Enter address and information about Mail:\n");
+            char city[INPUT];
+            check_input("City (str): ", city, INPUT, 0);
+            char street[INPUT];
+            check_input("Street (str): ", street, INPUT, 0);
+            char num_house[INPUT];
+            check_input("House number (int): ", num_house, INPUT, 1);
+            char building[INPUT];
+            check_input("Building (str): ", building, INPUT, 0);
+            char num_apart[INPUT];
+            check_input("Apartament number (int): ", num_apart, INPUT, 1);
+            char id_6[INPUT];
+            check_input("Index (int, 6): ", id_6, INPUT, 2);
+            Address mail_address;
+            switch (create_address(&mail_address, city, street, num_house, building, num_apart, id_6))
+            {
+            case correct_data:
+                char weight[INPUT];
+                check_input("Weignt (double): ", weight, INPUT, 3);
+                char id_14[INPUT];
+                check_input("index mail (int, 14): ", id_14, INPUT, 4);
+                char creation_time[INPUT];
+                check_input("Creation time (dd:MM:yyyy hh:mm:ss): ", creation_time, INPUT, 5);
+                char delivery_time[INPUT];
+                check_input("Delivery time (dd:MM:yyyy hh:mm:ss): ", delivery_time, INPUT, 5);
+                Mail mail;
+                switch (create_mail(&mail, mail_address, weight, id_14, creation_time, delivery_time))
+                {
+                case correct_data:
+                    switch (create_post(&post,mail,&current_mail_count,&max_mail_capacity))
+                    {
+                    case correct_data:
+                        printf("Mail information and address ADDED\n\n");
+                        break;
+                    case memory_alloc_error:
+                        printf("Memory allocation error\n");
+                        return 1;
+                    default:
+                        printf("Incorrect data-has already\n");
+                        return 1;
+                    }
+                    break;
+                case memory_alloc_error:
+                    printf("Memory allocation error\n");
+                    return 1;
+                default:
+                    printf("Incorrect data\n");
+                    return 1;
+                }
+                break;
+            case memory_alloc_error:
+                printf("Memory allocation error\n");
+                return 1;
+            default:
+                printf("Incorrect data\n");
+                return 1;
+            }
+        }
+        else if (strcmp(act, "delete") == 0)
+        {
+        }
+        else if (strcmp(act, "search") == 0)
+        {
+        }
+        else if (strcmp(act, "sort") == 0)
+        {
+        }
+        else if (strcmp(act, "time") == 0)
+        {
+        }
+        else if (strcmp(act, "print") == 0)
+        {
+        }
+        else if (strcmp(act, "exit") == 0)
+        {
+        }
+        else
+        {
+            printf("There is no such action\n\n");
+        }
     }
 
     return 0;
