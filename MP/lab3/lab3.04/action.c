@@ -95,3 +95,91 @@ void clear_string(String *str)
     str->str = NULL;
     str->length = 0;
 }
+// task2
+int valid_num(const char *str)
+{
+    for (int i = 0; str[i] != '\0'; i++)
+    {
+        if (!isdigit(str[i]))
+        {
+            return 0; // не цифра
+        }
+    }
+    return 1;
+}
+int valid_id_6(const char *index)
+{
+    if (strlen(index) != 6)
+    {
+        return 0; // не 6
+    }
+
+    for (int i = 0; i < 6; i++)
+    {
+        if (!isdigit(index[i]))
+        {
+            return 0; // Один из символов индекса не является цифрой
+        }
+    }
+
+    return 1;
+}
+void check_input(const char *print, char *input, int size, int valid)
+{
+    while (1)
+    {
+        printf("%s", print);
+        if (fgets(input, size, stdin))
+        {
+            input[strcspn(input, "\n")] = 0; // т.к. fgets добавляет \n - удаляем его
+            if (strlen(input) >= size - 1)
+            {
+                printf("large size - please re-enter.\n"); // не вмещается
+            }
+            else
+            {
+                if (strlen(input) == 0)
+                {
+                    printf("Incorrect data. please re-enter.\n");
+                }
+                else if (valid == 1 && valid_num(input) == 0) // если valid 1 - должны быть все цифры
+                {
+                    printf("Incorrect data. please re-enter. (INT) \n");
+                }
+                else if (valid == 2 && valid_id_6(input) == 0)
+                {
+                    printf("Incorrect data. please re-enter. (INT and 6) \n");
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        else
+        {
+            printf("Incorrect data. Please try again.\n");
+            input[0] = '\0'; // Очищаем буфер и повторяем запрос ввода
+        }
+    }
+}
+check_data create_address(Address *address, char *city, char *street, char *num_house_str, char *building, char *num_apart_str, char *id_6_str)
+{
+
+    address->num_house = atoi(num_house_str);
+    address->num_apart = atoi(num_apart_str);
+    address->id_6 = atoi(id_6_str);
+    String str_city;
+    String str_street;
+    String str_building;
+    if (create_string(city, &str_city) == memory_alloc_error ||
+        create_string(street, &str_street) == memory_alloc_error ||
+        create_string(building, &str_building) == memory_alloc_error)
+    {
+        return memory_alloc_error;
+    }
+    address->city = str_city;
+    address->street = str_street;
+    address->building = str_building;
+    return correct_data;
+}
