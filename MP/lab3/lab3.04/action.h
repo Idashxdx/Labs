@@ -67,4 +67,9 @@ void print_mail(Mail mail);
 check_data search_mail(Post *post, String id_14, size_t count);
 check_data add_mail_in_post(Post** post, Mail mail, size_t *count, size_t *max_count);
 check_data mail_deleted(Post** post, String id_14, size_t count);
+int compare_mail(const void *one, const void *two);
+int compare_time(const void *one, const void *two); // не сделано.
+void print_all_mail(Post *post,size_t count);
+void clear_address(Address *address);
+void clear_post(Post ** post, size_t count);
 #endif

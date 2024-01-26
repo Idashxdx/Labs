@@ -82,12 +82,12 @@ int compare_string(const String str1, const String str2)
         }
         else
         {
-            int lexComparison = strcmp(str1.str, str2.str);
-            if (lexComparison < 0)
+            int lex = strcmp(str1.str, str2.str);
+            if (lex < 0)
             {
                 return -1; // str1 меньше str2
             }
-            else if (lexComparison > 0)
+            else if (lex > 0)
             {
                 return 1; // str1 больше str2
             }
@@ -366,6 +366,7 @@ check_data search_mail(Post *post, String id_14, size_t count)
         {
             if (compare_string(post->mail[i].id_14, id_14) == 0)
             {
+                print_mail(post->mail[i]);
                 return correct_data;
             }
         }
@@ -412,4 +413,53 @@ check_data mail_deleted(Post **post, String id_14, size_t count)
         }
     }
     return incorrect_data;
+}
+int compare_mail(const void *one, const void *two)
+{
+    if (((Mail *)one)->address.id_6 < ((Mail *)two)->address.id_6)
+    {
+        return -1;
+    }
+    else if (((Mail *)one)->address.id_6 > ((Mail *)two)->address.id_6)
+    {
+        return 1;
+    }
+    else
+    {
+        // Если id_6 равны, сравниваем по id_14
+        return compare_string(((Mail *)one)->id_14, ((Mail *)two)->id_14);
+    }
+}
+int compare_time(const void *one, const void *two)
+{
+
+}
+void print_all_mail(Post *post, size_t count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(post->mail[i].id_14.str, "0"))
+        {
+            print_mail(post->mail[i]);
+        }
+    }
+}
+void clear_address(Address *address)
+{
+    clear_string(&address->city);
+    clear_string(&address->street);
+    clear_string(&address->building);
+}
+void clear_post(Post ** post, size_t count)
+{
+    for (int i = 0; i < count; i++)
+    {
+        clear_address(&(*post)->mail[i].address);
+        clear_string(&(*post)->mail[i].id_14);
+        clear_string(&(*post)->mail[i].creation_time);
+        clear_string(&(*post)->mail[i].delivery_time);
+    }
+    clear_address((*post)->address);
+    free((*post)->mail);
+    free(*post);
 }

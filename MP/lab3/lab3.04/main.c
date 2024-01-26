@@ -224,7 +224,8 @@ int main(int argc, char *argv[])
 
         else if (strcmp(act, "delete") == 0)
         {
-            printf("\nEnter index msil ---> ");
+            fgets(act, sizeof(act), stdin);
+            printf("\nEnter index mail ---> ");
             char id_14[INPUT];
             check_input("index mail (int, 14): ", id_14, INPUT, 4);
             String str_id_14;
@@ -242,32 +243,71 @@ int main(int argc, char *argv[])
                     break;
                 case memory_alloc_error:
                     printf("Memory allocation error\n");
+                    clear_string(&str_id_14);
                     return 1;
                 default:
                     printf("Incorrect data-Mail doesn't exist \n\n");
+                    clear_string(&str_id_14);
                     continue;
                 }
             }
+            clear_string(&str_id_14);
         }
 
         else if (strcmp(act, "search") == 0)
         {
+            fgets(act, sizeof(act), stdin);
+            printf("\nEnter index mail ---> ");
+            char id_14[INPUT];
+            check_input("index mail (int, 14): ", id_14, INPUT, 4);
+            String str_id_14;
+            if (create_string(id_14, &str_id_14) == memory_alloc_error)
+            {
+                printf("Memory allocation error\n");
+                return 1;
+            }
+            else
+            {
+                switch (search_mail(post, str_id_14, current_mail_count))
+                {
+                case correct_data:
+                    break;
+                case memory_alloc_error:
+                    printf("Memory allocation error\n");
+                    clear_string(&str_id_14);
+                    return 1;
+                default:
+                    printf("Incorrect data-Mail doesn't exist \n\n");
+                    clear_string(&str_id_14);
+                    continue;
+                }
+            }
+            clear_string(&str_id_14);
         }
 
         else if (strcmp(act, "sort") == 0)
         {
+            fgets(act, sizeof(act), stdin);
+            qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_mail);
+            printf("Mails Sorting\n\n");
         }
 
         else if (strcmp(act, "time") == 0)
         {
+            fgets(act, sizeof(act), stdin);
+            qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_time); // сортировку по дате
+            // далее вывод - сначала доставленых потом - срок доставки истек (функцию сделать)
         }
-
         else if (strcmp(act, "print") == 0)
         {
+            fgets(act, sizeof(act), stdin);
+            print_all_mail(post, current_mail_count);
         }
 
         else if (strcmp(act, "exit") == 0)
         {
+            fgets(act, sizeof(act), stdin);
+            break;
         }
 
         else
@@ -275,6 +315,6 @@ int main(int argc, char *argv[])
             printf("There is no such action\n\n");
         }
     }
-
+    clear_post(&post, current_mail_count);
     return 0;
 }
