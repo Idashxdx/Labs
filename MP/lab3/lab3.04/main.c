@@ -295,7 +295,7 @@ int main(int argc, char *argv[])
         else if (strcmp(act, "time") == 0)
         {
             fgets(act, sizeof(act), stdin);
-            qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_time); // сортировку по дате
+            qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_time); // сортировку по дате - ибо вывод должен быть отсортированный
             // далее вывод - сначала доставленых потом - срок доставки истек (функцию сделать)
         }
         else if (strcmp(act, "print") == 0)
