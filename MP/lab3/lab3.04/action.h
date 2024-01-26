@@ -61,8 +61,9 @@ int valid_weight(const char *weight);
 int valid_datetime(const char *datetime);
 void check_input(const char *print, char *input, int size, int valid);
 check_data create_address(Address *address, char *city, char *street, char *num_house_str, char *building, char *num_apart_str, char *id_6_str);
+check_data create_post(Post ** post, Address *address, size_t *count, size_t *max_count);
 check_data create_mail(Mail *mail, Address address, char* weight_str, char *id_14_str, char *creation_time, char* delivery_time);
 void print_mail(Mail mail);
 check_data search_mail(Post *post, String id_14, size_t count);
-check_data create_post(Post** post, Mail mail, size_t *count, size_t *max_count);
+check_data add_mail_in_post(Post** post, Mail mail, size_t *count, size_t *max_count);
 #endif

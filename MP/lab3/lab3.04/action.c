@@ -71,11 +71,32 @@ check_data copy_to_dinamic_string(const String str1, String *str2)
 }
 int compare_string(const String str1, const String str2)
 {
-    if (str1.length != str2.length)
     {
-        return str1.length - str2.length;
+        if (str1.length < str2.length)
+        {
+            return -1; // str1 меньше str2
+        }
+        else if (str1.length > str2.length)
+        {
+            return 1; // str1 больше str2
+        }
+        else
+        {
+            int lexComparison = strcmp(str1.str, str2.str);
+            if (lexComparison < 0)
+            {
+                return -1; // str1 меньше str2
+            }
+            else if (lexComparison > 0)
+            {
+                return 1; // str1 больше str2
+            }
+            else
+            {
+                return 0; // str1 равно str2
+            }
+        }
     }
-    return strcmp(str1.str, str2.str);
 }
 check_data concatenation_string(String *new_str1, const String str2)
 {
@@ -288,6 +309,24 @@ check_data create_address(Address *address, char *city, char *street, char *num_
     address->building = str_building;
     return correct_data;
 }
+check_data create_post(Post **post, Address *address, size_t *count, size_t *max_count)
+{
+    (*count) = 0;
+    (*max_count) = 2;
+    (*post) = (Post *)malloc(sizeof(Post));
+    if (!*post)
+    {
+        return memory_alloc_error;
+    }
+    (*post)->address = address;
+    (*post)->mail = (Mail *)malloc(sizeof(Mail) * (*max_count));
+    if (!(*post)->mail)
+    {
+        free(*post);
+        return memory_alloc_error;
+    }
+    return correct_data;
+}
 check_data create_mail(Mail *mail, Address address, char *weight_str, char *id_14, char *creation_time, char *delivery_time)
 {
     mail->address = address;
@@ -322,22 +361,18 @@ void print_mail(Mail mail)
 }
 check_data search_mail(Post *post, String id_14, size_t count)
 {
-    for (size_t i = 0; i < count; i++)
     {
-        int result = 1;
-        if (compare_string(post->mail[i].id_14, id_14) == 1)
+        for (size_t i = 0; i < count; i++)
         {
-            return incorrect_data;
+            if (compare_string(post->mail[i].id_14, id_14) == 0)
+            {
+                return correct_data;
+            }
         }
-        if (!result)
-        {
-            print_mail(post->mail[i]);
-            return correct_data;
-        }
+        return incorrect_data;
     }
-    return incorrect_data;
 }
-check_data create_post(Post **post, Mail mail, size_t *count, size_t *max_count)
+check_data add_mail_in_post(Post **post, Mail mail, size_t *count, size_t *max_count)
 {
     if (search_mail((*post), mail.id_14, (*count)) == correct_data) // проверка на дубликат
     {

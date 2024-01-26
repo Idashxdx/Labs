@@ -125,7 +125,18 @@ int main(int argc, char *argv[])
     switch (create_address(&post_address, city, street, num_house, building, num_apart, id_6))
     {
     case correct_data:
-        printf("Post office address ADDED\n\n");
+        switch (create_post(&post, &post_address, &current_mail_count, &max_mail_capacity))
+        {
+        case correct_data:
+            printf("Post office address ADDED\n\n");
+            break;
+        case memory_alloc_error:
+            printf("Memory allocation error\n");
+            return 1;
+        default:
+            printf("Incorrect data\n");
+            return 1;
+        }
         break;
     case memory_alloc_error:
         printf("Memory allocation error\n");
@@ -180,7 +191,7 @@ int main(int argc, char *argv[])
                 switch (create_mail(&mail, mail_address, weight, id_14, creation_time, delivery_time))
                 {
                 case correct_data:
-                    switch (create_post(&post,mail,&current_mail_count,&max_mail_capacity))
+                    switch (add_mail_in_post(&post, mail, &current_mail_count, &max_mail_capacity))
                     {
                     case correct_data:
                         printf("Mail information and address ADDED\n\n");
@@ -189,8 +200,8 @@ int main(int argc, char *argv[])
                         printf("Memory allocation error\n");
                         return 1;
                     default:
-                        printf("Incorrect data-has already\n");
-                        return 1;
+                        printf("Incorrect data-such mail already exists\n\n");
+                        continue;
                     }
                     break;
                 case memory_alloc_error:
@@ -198,7 +209,7 @@ int main(int argc, char *argv[])
                     return 1;
                 default:
                     printf("Incorrect data\n");
-                    return 1;
+                    continue;
                 }
                 break;
             case memory_alloc_error:
@@ -206,7 +217,7 @@ int main(int argc, char *argv[])
                 return 1;
             default:
                 printf("Incorrect data\n");
-                return 1;
+                continue;
             }
         }
         else if (strcmp(act, "delete") == 0)
