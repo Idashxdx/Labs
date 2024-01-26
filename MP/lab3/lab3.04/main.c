@@ -159,6 +159,7 @@ int main(int argc, char *argv[])
         printf("<exit> - exit\n\n");
         printf("ENTER ----> ");
         scanf("%s", act);
+
         if (strcmp(act, "add") == 0)
         {
             fgets(act, sizeof(act), stdin);
@@ -220,24 +221,55 @@ int main(int argc, char *argv[])
                 continue;
             }
         }
+
         else if (strcmp(act, "delete") == 0)
         {
+            printf("\nEnter index msil ---> ");
+            char id_14[INPUT];
+            check_input("index mail (int, 14): ", id_14, INPUT, 4);
+            String str_id_14;
+            if (create_string(id_14, &str_id_14) == memory_alloc_error)
+            {
+                printf("Memory allocation error\n");
+                return 1;
+            }
+            else
+            {
+                switch (mail_deleted(&post, str_id_14, current_mail_count))
+                {
+                case correct_data:
+                    printf("Mail DELETED\n\n");
+                    break;
+                case memory_alloc_error:
+                    printf("Memory allocation error\n");
+                    return 1;
+                default:
+                    printf("Incorrect data-Mail doesn't exist \n\n");
+                    continue;
+                }
+            }
         }
+
         else if (strcmp(act, "search") == 0)
         {
         }
+
         else if (strcmp(act, "sort") == 0)
         {
         }
+
         else if (strcmp(act, "time") == 0)
         {
         }
+
         else if (strcmp(act, "print") == 0)
         {
         }
+
         else if (strcmp(act, "exit") == 0)
         {
         }
+
         else
         {
             printf("There is no such action\n\n");

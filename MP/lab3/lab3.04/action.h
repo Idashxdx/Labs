@@ -66,4 +66,5 @@ check_data create_mail(Mail *mail, Address address, char* weight_str, char *id_1
 void print_mail(Mail mail);
 check_data search_mail(Post *post, String id_14, size_t count);
 check_data add_mail_in_post(Post** post, Mail mail, size_t *count, size_t *max_count);
+check_data mail_deleted(Post** post, String id_14, size_t count);
 #endif

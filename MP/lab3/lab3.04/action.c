@@ -393,3 +393,23 @@ check_data add_mail_in_post(Post **post, Mail mail, size_t *count, size_t *max_c
     }
     return correct_data;
 }
+check_data mail_deleted(Post **post, String id_14, size_t count)
+{
+    for (size_t i = 0; i < count; i++)
+    {
+        if (compare_string((*post)->mail[i].id_14, id_14) == 0)
+        {
+            clear_string(&(*post)->mail[i].id_14);
+            switch (create_string("0", &(*post)->mail[i].id_14))
+            {
+            case correct_data:
+                return correct_data;
+            case memory_alloc_error:
+                return memory_alloc_error;
+            case incorrect_data:
+                return incorrect_data;
+            }
+        }
+    }
+    return incorrect_data;
+}
