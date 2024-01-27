@@ -16,7 +16,7 @@ typedef enum check_data
     incorrect_data,
     memory_alloc_error
 } check_data;
-//task1
+// task1
 typedef struct
 {
     char *str;
@@ -45,7 +45,7 @@ typedef struct
     Address *address;
     Mail *mail;
 } Post;
-//task1
+// task1
 check_data create_string(const char *input, String *str);
 int equality(const String str1, const String str2);
 check_data copy_string(String *new_str1, const String str2);
@@ -53,7 +53,7 @@ check_data copy_to_dinamic_string(const String str1, String *str2);
 int compare_string(const String str1, const String str2);
 check_data concatenation_string(String *new_str1, const String str2);
 void clear_string(String *str);
-//task2
+// task2
 int valid_num(const char *str);
 int valid_id_6(const char *index);
 int valid_id_14(const char *index);
@@ -61,17 +61,17 @@ int valid_weight(const char *weight);
 int valid_datetime(const char *datetime);
 void check_input(const char *print, char *input, int size, int valid);
 check_data create_address(Address *address, char *city, char *street, char *num_house_str, char *building, char *num_apart_str, char *id_6_str);
-check_data create_post(Post ** post, Address *address, size_t *count, size_t *max_count);
-check_data create_mail(Mail *mail, Address address, char* weight_str, char *id_14_str, char *creation_time, char* delivery_time);
+check_data create_post(Post **post, Address *address, size_t *count, size_t *max_count);
+check_data create_mail(Mail *mail, Address address, char *weight_str, char *id_14_str, char *creation_time, char *delivery_time);
 void print_mail(Mail mail);
 check_data search_mail(Post *post, String id_14, size_t count);
-check_data add_mail_in_post(Post** post, Mail mail, size_t *count, size_t *max_count);
-check_data mail_deleted(Post** post, String id_14, size_t count);
+check_data add_mail_in_post(Post **post, Mail mail, size_t *count, size_t *max_count);
+check_data mail_deleted(Post **post, String id_14, size_t count);
 int compare_mail(const void *one, const void *two);
 int compare_time(const void *one, const void *two);
 String get_system_time();
 void find_delivered_mail(Post **post, size_t count);
-void print_all_mail(Post *post,size_t count);
+void print_all_mail(Post *post, size_t count);
 void clear_address(Address *address);
-void clear_post(Post ** post, size_t count);
+void clear_post(Post **post, size_t count);
 #endif
