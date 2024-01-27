@@ -432,8 +432,67 @@ int compare_mail(const void *one, const void *two)
 }
 int compare_time(const void *one, const void *two)
 {
-
+    int year1, month1, day1, hour1, minute1, second1;
+    int year2, month2, day2, hour2, minute2, second2;
+    sscanf(((Mail *)one)->creation_time.str, "%d:%d:%d %d:%d:%d", &day1, &month1, &year1, &hour1, &minute1, &second1);
+    sscanf(((Mail *)two)->creation_time.str, "%d:%d:%d %d:%d:%d", &day2, &month2, &year2, &hour2, &minute2, &second2);
+    if (year1 < year2 ||
+        (year1 == year2 && month1 < month2) ||
+        (year1 == year2 && month1 == month2 && day1 < day2) ||
+        (year1 == year2 && month1 == month2 && day1 == day2 && hour1 < hour2) ||
+        (year1 == year2 && month1 == month2 && day1 == day2 && hour1 == hour2 && minute1 < minute2) ||
+        (year1 == year2 && month1 == month2 && day1 == day2 && hour1 == hour2 && minute1 == minute2 && second1 < second2))
+    {
+        return -1;
+    }
+    else if (year1 == year2 && month1 == month2 && day1 == day2 && hour1 == hour2 && minute1 == minute2 && second1 == second2)
+    {
+        return 0;
+    }
+    else
+    {
+        return 1;
+    }
 }
+String get_system_time()
+{
+    time_t current_time;
+    struct tm *time_info;
+    char time_string[20];
+
+    time(&current_time);
+    time_info = localtime(&current_time);
+    strftime(time_string, sizeof(time_string), "%d:%m:%Y %H:%M:%S", time_info);
+
+    String system_time;
+    system_time.str = strdup(time_string);
+    system_time.length = strlen(time_string);
+
+    return system_time;
+}
+void find_delivered_mail(Post **post, size_t count)
+{
+    String system_time = get_system_time();
+
+    printf("Delivered:");
+    for (int i = 0; i < count; i++)
+    {
+
+        if (strcmp(system_time.str, (*post)->mail[i].delivery_time.str) <= 0)
+        {
+            print_mail((*post)->mail[i]);
+        }
+    }
+    printf("\nTime is up:");
+    for (int i = 0; i < count; i++)
+    {
+        if (strcmp(system_time.str, (*post)->mail[i].delivery_time.str) > 0)
+        {
+            print_mail((*post)->mail[i]);
+        }
+    }
+}
+
 void print_all_mail(Post *post, size_t count)
 {
     for (int i = 0; i < count; i++)
@@ -450,7 +509,7 @@ void clear_address(Address *address)
     clear_string(&address->street);
     clear_string(&address->building);
 }
-void clear_post(Post ** post, size_t count)
+void clear_post(Post **post, size_t count)
 {
     for (int i = 0; i < count; i++)
     {

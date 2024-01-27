@@ -295,8 +295,18 @@ int main(int argc, char *argv[])
         else if (strcmp(act, "time") == 0)
         {
             fgets(act, sizeof(act), stdin);
-            qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_time); // сортировку по дате - ибо вывод должен быть отсортированный
-            // далее вывод - сначала доставленых потом - срок доставки истек (функцию сделать)
+            // если dtime больше или равно системного - то они доставленные, если меньше то время истекло
+            if (current_mail_count > 0)
+            {
+                // Сортировка массива отправлений по времени создания
+                qsort(post->mail, current_mail_count, sizeof(post->mail[0]), compare_time);
+                // Поиск и вывод доставленных отправлений
+                find_delivered_mail(&post, current_mail_count);
+            }
+            else
+            {
+                printf("No mail items created.\n");
+            }
         }
         else if (strcmp(act, "print") == 0)
         {
