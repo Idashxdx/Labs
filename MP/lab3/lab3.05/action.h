@@ -21,8 +21,9 @@ typedef struct
     unsigned int id;
     char name[50];
     char surname[50];
-    char group[11];
-    unsigned char *marks;
+    char group[10];
+    unsigned char *grades;
 } Student;
 
+check_data read_input(FILE *file, Student **students, size_t *count, size_t *capacity, double *count_grades, double *summ_grades, double *average_grades);
 #endif
