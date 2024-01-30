@@ -95,7 +95,6 @@ int main(int argc, char *argv[])
                             write_student_info_to_file(output_file, found_student);
                             // сброс буфера - что бы не хранилось после записи.
                             fflush(output_file);
-                            free(found_student);
                         }
                         i++;
                     }
@@ -119,7 +118,6 @@ int main(int argc, char *argv[])
                             fprintf(output_file, "Student find by Name: %s ----> ", name_to_find);
                             write_student_info_to_file(output_file, found_student);
                             fflush(output_file);
-                            free(found_student);
                         }
                         i++;
                     }
