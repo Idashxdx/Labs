@@ -2,7 +2,6 @@
 
 int main(int argc, char *argv[])
 {
-
     if (argc != 3)
     {
         printf("Enter file input, file output \n");
@@ -25,16 +24,11 @@ int main(int argc, char *argv[])
             printf("File 2 opening error\n");
             return 1;
         }
-
         // Читаем файл
         Student *students = NULL;
         size_t count = 0;    // сколько всего студентов
         size_t capacity = 2; // макс. к-во студентов
-        // для вычисления средней оценки :
-        double count_grades = 0;
-        double summ_grades = 0;
-        double average_grades;
-        switch (read_input(input_file, &students, &count, &capacity, &count_grades, &summ_grades, &average_grades))
+        switch (read_input(input_file, &students, &count, &capacity))
         {
         case correct_data:
             printf("File reading\n\n");
@@ -50,21 +44,23 @@ int main(int argc, char *argv[])
             printf("Incorrect data in file\n");
             return 1;
         }
+        fprintf(output_file, "Student: \n");
+        fflush(output_file);
+        write_all(output_file, count, students);
+        fflush(output_file);
         while (1)
         {
             char act[10];
             printf("Choose an action:\n");
             printf("<find>  - find a student by ...\n");
             printf("<sort> - sort students by ...\n");
-            printf("<write> - write to file: best student, student by index\n");
+            printf("<write> - write to file: best student, student's GPA\n"); // вывод лучшего студента или студента по индексу и его средний балл
             printf("<exit> - exit\n\n");
             printf("ENTER ----> ");
             scanf("%s", act);
-
             if (strcmp(act, "find") == 0)
             {
                 fgets(act, sizeof(act), stdin);
-
                 char act2[10];
                 printf("Choose. Find by:\n");
                 printf("<id>  - find a student by id\n");
@@ -168,7 +164,7 @@ int main(int argc, char *argv[])
                     printf("Result write to file\n\n");
                 }
                 else if (strcmp(act2, "group") == 0)
-               {
+                {
                     fgets(act2, sizeof(act2), stdin);
                     char group_to_find[50];
                     printf("Enter student group: ");
@@ -221,18 +217,42 @@ int main(int argc, char *argv[])
                 if (strcmp(act3, "id") == 0)
                 {
                     fgets(act3, sizeof(act3), stdin);
+                    qsort(students, count, sizeof(students[0]), compare_id);
+                    fprintf(output_file, "Sort by id: \n\n");
+                    fflush(output_file);
+                    write_all(output_file, count, students);
+                    fflush(output_file);
+                    printf("Students sort and write to file\n\n");
                 }
                 else if (strcmp(act3, "name") == 0)
                 {
                     fgets(act3, sizeof(act3), stdin);
+                    qsort(students, count, sizeof(students[0]), compare_name);
+                    fprintf(output_file, "Sort by name: \n\n");
+                    fflush(output_file);
+                    write_all(output_file, count, students);
+                    fflush(output_file);
+                    printf("Students sort and write to file\n\n");
                 }
                 else if (strcmp(act3, "surname") == 0)
                 {
                     fgets(act3, sizeof(act3), stdin);
+                    qsort(students, count, sizeof(students[0]), compare_surname);
+                    fprintf(output_file, "Sort by surname: \n\n");
+                    fflush(output_file);
+                    write_all(output_file, count, students);
+                    fflush(output_file);
+                    printf("Students sort and write to file\n\n");
                 }
                 else if (strcmp(act3, "group") == 0)
                 {
                     fgets(act3, sizeof(act3), stdin);
+                    qsort(students, count, sizeof(students[0]), compare_group);
+                    fprintf(output_file, "Sort by group: \n\n");
+                    fflush(output_file);
+                    write_all(output_file, count, students);
+                    fflush(output_file);
+                    printf("Students sort and write to file\n\n");
                 }
                 else if (strcmp(act3, "back") == 0)
                 {
@@ -246,6 +266,90 @@ int main(int argc, char *argv[])
             else if (strcmp(act, "write") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                char act4[10];
+                printf("Choose. Write:\n");
+                printf("<best>  - write in file best student\n");
+                printf("<gpa> - student's average exam score by id\n");
+                printf("<back> - back\n\n");
+                printf("ENTER ----> ");
+                scanf("%s", act4);
+                if (strcmp(act4, "best") == 0)
+                {
+                    fgets(act4, sizeof(act4), stdin);
+                    double total_sum = 0;
+                    size_t total_count = 0;
+                    Student best_student;
+                    double best_average = 0;
+                    double average_grades = 0;
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        double sum = 0;
+                        double count = 0;
+                        for (size_t j = 0; j < 5; j++)
+                        {
+                            sum += students[i].grades[j];
+                            count++;
+                        }
+                        double average = sum / count;
+                        total_sum += sum;
+                        total_count += count;
+                        if (average > best_average)
+                        {
+                            best_average = average;
+                            best_student = students[i];
+                        }
+                    }
+                    average_grades = total_sum / total_count;
+                    fprintf(output_file, "Best student ---> id: %u; %s %s; Group: %s; ---> %f\n", best_student.id, best_student.name, best_student.surname, best_student.group, best_average);
+                    fflush(output_file);
+                    printf("Result write to file\n\n");
+                }
+                else if (strcmp(act4, "gpa") == 0)
+                {
+                    fgets(act4, sizeof(act4), stdin);
+                    char input[50];
+                    unsigned int id_to_find;
+                    printf("Enter student ID: ");
+                    fgets(input, sizeof(input), stdin);
+                    if (sscanf(input, "%u", &id_to_find) != 1)
+                    {
+                        printf("Enter a valid unsigned int for ID.\n\n");
+                        continue;
+                    }
+                    int found = 0;
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        Student *found_student = find_student_by_id(students, i, id_to_find);
+                        if (found_student != NULL)
+                        {
+                            double sum = 0;
+                            double count = 0;
+                            for (size_t j = 0; j < 5; j++)
+                            {
+                                sum += found_student->grades[j];
+                                count++;
+                            }
+                            fprintf(output_file, "Average grades student by id: %u; %s; Group: %s; ---> %f\n", id_to_find, found_student->surname, found_student->group, sum / count);
+                            fflush(output_file);
+                            found = 1;
+                        }
+                        i++;
+                    }
+                    if (!found) // если студент не был найден
+                    {
+                        fprintf(output_file, "Student with id %u not found\n", id_to_find);
+                        fflush(output_file);
+                    }
+                    printf("Result write to file\n\n");
+                }
+                else if (strcmp(act4, "back") == 0)
+                {
+                    continue;
+                }
+                else
+                {
+                    printf("There is no such action. Try again\n\n");
+                }
             }
             else if (strcmp(act, "exit") == 0)
             {
@@ -256,7 +360,6 @@ int main(int argc, char *argv[])
                 printf("There is no such action\n\n");
             }
         }
-
         for (size_t i = 0; i < count; i++)
         {
             free(students[i].grades);

@@ -1,4 +1,8 @@
-Student find by group: 11 ----> ID: 21212; Name: N; Surname: V; Group: 11; Grades: 5 4 5 4 3; 
+Student: 
+1 --> 21212; N; V; 11; Grades: 5 4 5 4 3; 
 
-Student find by surname: V ----> ID: 21212; Name: N; Surname: V; Group: 11; Grades: 5 4 5 4 3; 
+2 --> 213121; V; A; 22; Grades: 2 3 3 4 3; 
 
+3 --> 2133; A; E; 10; Grades: 5 5 5 5 5; 
+
+Best student ---> id:2133; A E; Group :10; ---> 5.000000
