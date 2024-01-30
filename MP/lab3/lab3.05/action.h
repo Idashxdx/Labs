@@ -26,4 +26,7 @@ typedef struct
 } Student;
 
 check_data read_input(FILE *file, Student **students, size_t *count, size_t *capacity, double *count_grades, double *summ_grades, double *average_grades);
+Student *find_student_by_id(Student *students, size_t count, unsigned int id);
+Student *find_student_by_name(Student *students, size_t count,char *name);
+void write_student_info_to_file(FILE *file, Student *student);
 #endif

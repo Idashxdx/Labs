@@ -86,3 +86,33 @@ check_data read_input(FILE *file, Student **students, size_t *count, size_t *cap
 
     return correct_data;
 }
+Student *find_student_by_id(Student *students, size_t count, unsigned int id)
+{
+
+    if (students[count].id == id)
+    {
+        return &students[count];
+    }
+    else
+    {
+        return NULL; // Студент не найден
+    }
+}
+Student *find_student_by_name(Student *students, size_t count, char *name)
+{
+    if (strcmp(students[count].name, name) == 0)
+    {
+        return &students[count];
+    }
+    else
+    {
+        return NULL; // Студент не найден
+    }
+}
+
+void write_student_info_to_file(FILE *file, Student *student)
+{
+    fprintf(file, "ID: %u; Name: %s; Surname: %s; Group: %s; Grades: %hhu %hhu %hhu %hhu %hhu; \n\n",
+            student->id, student->name, student->surname, student->group,
+            student->grades[0], student->grades[1], student->grades[2], student->grades[3], student->grades[4]);
+}
