@@ -86,6 +86,7 @@ int main(int argc, char *argv[])
                         printf("Enter a valid unsigned int for ID.\n\n");
                         continue;
                     }
+                    int found = 0;
                     for (size_t i = 0; i < count; i++)
                     {
                         Student *found_student = find_student_by_id(students, i, id_to_find);
@@ -95,8 +96,14 @@ int main(int argc, char *argv[])
                             write_student_info_to_file(output_file, found_student);
                             // сброс буфера - что бы не хранилось после записи.
                             fflush(output_file);
+                            found = 1;
                         }
                         i++;
+                    }
+                    if (!found) // если студент не был найден
+                    {
+                        fprintf(output_file, "Student with id %u not found\n", id_to_find);
+                        fflush(output_file);
                     }
                     printf("Result write to file\n\n");
                 }
@@ -110,6 +117,7 @@ int main(int argc, char *argv[])
                         printf("Enter a valid char for Name.\n\n");
                         continue;
                     }
+                    int found = 0;
                     for (size_t i = 0; i < count; i++)
                     {
                         Student *found_student = find_student_by_name(students, i, name_to_find);
@@ -118,18 +126,76 @@ int main(int argc, char *argv[])
                             fprintf(output_file, "Student find by Name: %s ----> ", name_to_find);
                             write_student_info_to_file(output_file, found_student);
                             fflush(output_file);
+                            found = 1;
                         }
                         i++;
+                    }
+                    if (!found) // если студент не был найден
+                    {
+                        fprintf(output_file, "Student with name %s not found\n", name_to_find);
+                        fflush(output_file);
                     }
                     printf("Result write to file\n\n");
                 }
                 else if (strcmp(act2, "surname") == 0)
                 {
                     fgets(act2, sizeof(act2), stdin);
+                    char surname_to_find[50];
+                    printf("Enter student surname: ");
+                    if (scanf("%s", surname_to_find) != 1)
+                    {
+                        printf("Enter a valid char for surname.\n\n");
+                        continue;
+                    }
+                    int found = 0;
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        Student *found_student = find_student_by_surname(students, i, surname_to_find);
+                        if (found_student != NULL)
+                        {
+                            fprintf(output_file, "Student find by surname: %s ----> ", surname_to_find);
+                            write_student_info_to_file(output_file, found_student);
+                            fflush(output_file);
+                            found = 1;
+                        }
+                        i++;
+                    }
+                    if (!found)
+                    {
+                        fprintf(output_file, "Student with surname %s not found\n", surname_to_find);
+                        fflush(output_file);
+                    }
+                    printf("Result write to file\n\n");
                 }
                 else if (strcmp(act2, "group") == 0)
-                {
+               {
                     fgets(act2, sizeof(act2), stdin);
+                    char group_to_find[50];
+                    printf("Enter student group: ");
+                    if (scanf("%s", group_to_find) != 1)
+                    {
+                        printf("Enter a valid char for group.\n\n");
+                        continue;
+                    }
+                    int found = 0;
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        Student *found_student = find_student_by_group(students, i, group_to_find);
+                        if (found_student != NULL)
+                        {
+                            fprintf(output_file, "Student find by group: %s ----> ", group_to_find);
+                            write_student_info_to_file(output_file, found_student);
+                            fflush(output_file);
+                            found = 1;
+                        }
+                        i++;
+                    }
+                    if (!found)
+                    {
+                        fprintf(output_file, "Student with group %s not found\n", group_to_find);
+                        fflush(output_file);
+                    }
+                    printf("Result write to file\n\n");
                 }
                 else if (strcmp(act2, "back") == 0)
                 {

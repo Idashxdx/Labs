@@ -109,7 +109,29 @@ Student *find_student_by_name(Student *students, size_t count, char *name)
         return NULL; // Студент не найден
     }
 }
+Student *find_student_by_surname(Student *students, size_t count, char *surname)
+{
+    if (strcmp(students[count].surname, surname) == 0)
+    {
+        return &students[count];
+    }
+    else
+    {
+        return NULL; // Студент не найден
+    }
+}
+Student *find_student_by_group(Student *students, size_t count, char *group)
+{
 
+    if (strcmp(students[count].group, group) == 0)
+    {
+        return &students[count];
+    }
+    else
+    {
+        return NULL; // Студент не найден
+    }
+}
 void write_student_info_to_file(FILE *file, Student *student)
 {
     fprintf(file, "ID: %u; Name: %s; Surname: %s; Group: %s; Grades: %hhu %hhu %hhu %hhu %hhu; \n\n",
