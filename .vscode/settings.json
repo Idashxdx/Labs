@@ -13,7 +13,8 @@
         "wait.h": "c",
         "pthread.h": "c",
         "semaphore.h": "c",
-        "typeinfo": "c"
+        "typeinfo": "c",
+        "time.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
