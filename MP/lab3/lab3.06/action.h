@@ -37,7 +37,8 @@ typedef struct RouteNode
     struct RouteNode *next;
 } RouteNode;
 int valid_datetime(const char *datetime);
+check_data add_stop_to_route(RouteNode **head, int x, int y, Stops stop);
 check_data read_input(RouteNode **head, int count, char *files[]);
-void free_route(RouteNode *root);
-void print_routes(RouteNode *head);
+void print_stops(StopNode *head);
+void free_route(RouteNode *head);
 #endif

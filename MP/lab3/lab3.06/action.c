@@ -46,6 +46,21 @@ int valid_datetime(const char *datetime)
     }
     return 1;
 }
+check_data add_stop_to_route(RouteNode **head, int x, int y, Stops stop)
+{
+    RouteNode *newRouteNode = (RouteNode *)malloc(sizeof(RouteNode));
+    newRouteNode->next = NULL;
+    StopNode *newStopNode = (StopNode *)malloc(sizeof(StopNode));
+    newStopNode->value = stop;
+    newStopNode->next = NULL;
+    newStopNode->value.x = x;
+    newStopNode->value.y = y;
+    newRouteNode->route = newStopNode;
+    newRouteNode->next = *head;
+    *head = newRouteNode;
+
+    return correct_data;
+}
 check_data read_input(RouteNode **head, int count, char *files[])
 {
     for (int i = 0; i < count; i++)
@@ -55,20 +70,30 @@ check_data read_input(RouteNode **head, int count, char *files[])
         {
             return incorrect_data;
         }
-        Stops stop;
+
         int x, y;
         if (fscanf(file, "%d %d", &x, &y) != 2)
         {
             fclose(file);
             return incorrect_data;
         }
-        stop.x = x;
-        stop.y = y;
-        while()
-        {
-            
-        }
 
+        Stops stop;
+        while (fscanf(file, "%s %s %s %s", stop.number, stop.stop_time, stop.departure_time, stop.marker) == 4)
+        {
+            if (!valid_datetime(stop.stop_time) || !valid_datetime(stop.departure_time))
+            {
+                return incorrect_data;
+            }
+            check_data result = add_stop_to_route(head, x, y, stop);
+            if (result != correct_data)
+            {
+                fclose(file);
+                return result;
+            }
+        }
+        fclose(file);
     }
     return correct_data;
 }
+
