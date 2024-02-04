@@ -26,4 +26,5 @@ typedef struct Node
 void free_node(Node *node);
 check_data create_node(Node **node, char *str);
 check_data create_tree(FILE *file, char **separators, int count, Node **node);
+void find_str(Node *node, int *result, char *str, int found);
 #endif

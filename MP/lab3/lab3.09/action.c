@@ -134,3 +134,21 @@ check_data create_tree(FILE *file, char **separators, int count, Node **node)
     free(str);
     return correct_data;
 }
+void find_str(Node *node, int *result, char *str, int found)
+{
+    if (!node)
+    {
+        return;
+    }
+    if (strcmp(node->data, str) == 0) // если нашли - присваеваем количество - нет то передвигаемя по дереву
+    {
+        (*result) = node->count;
+        found = 1;
+        return;
+    }
+    if (!found)
+    {
+        find_str(node->left, result, str, found);
+        find_str(node->right, result, str, found);
+    }
+}

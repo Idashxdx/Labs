@@ -49,26 +49,61 @@ int main(int argc, char *argv[])
             if (strcmp(act, "find") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                char str_to_find[50];
+                printf("Enter word: ");
+                if (scanf("%s", str_to_find) != 1)
+                {
+                    printf("Enter a valid char.\n\n");
+                    continue;
+                }
+                int result = 0;
+                int found = 0;
+                find_str(node, &result, str_to_find, found);
+                printf("The word '%s' in the text ---> %d \n\n", str_to_find, result);
             }
             else if (strcmp(act, "output") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                char input[50];
+                unsigned int n;
+                printf("Enter student ID: ");
+                fgets(input, sizeof(input), stdin);
+                if (sscanf(input, "%u", &n) != 1)
+                {
+                    printf("Enter a valid unsigned int.\n\n");
+                    continue;
+                }
+                // надо отсортировать по возрастанию и вывести n слов
             }
-              else if (strcmp(act, "short") == 0)
+            else if (strcmp(act, "short") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                // таже сортировка + вывод последнего
             }
-              else if (strcmp(act, "long") == 0)
+            else if (strcmp(act, "long") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                // таже сортировка + вывод 1
             }
-              else if (strcmp(act, "depth") == 0)
+            else if (strcmp(act, "depth") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                // функция поиск в глубину
             }
-              else if (strcmp(act, "print") == 0)
+            else if (strcmp(act, "print") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                char output[50];
+                scanf("%s\n", output);
+                FILE *output_file = fopen(output, "w");
+                if (!output_file)
+                {
+                    printf("File 2 opening error\n");
+                    continue;
+                }
+                // функция печати дерева.
+                fclose(output_file);
+                // далее читаем файл и восстановление бинарного дерева из файла
             }
             else if (strcmp(act, "exit") == 0)
             {
