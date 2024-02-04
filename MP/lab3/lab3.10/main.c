@@ -27,7 +27,7 @@ int main(int argc, char *argv[])
     while (getline(&str, &size, input) != -1)
     {
         if (str[strcspn(str, "\n")] != 0)
-        { 
+        {
             Tree tree;
             switch (create_tree(&tree, str))
             {
@@ -47,5 +47,6 @@ int main(int argc, char *argv[])
     free(str);
     fclose(input);
     fclose(output);
+    printf("M8O-211B-22  Mashrabova  lab3 tack10\n");
     return 0;
 }
