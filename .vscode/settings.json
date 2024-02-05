@@ -14,7 +14,8 @@
         "pthread.h": "c",
         "semaphore.h": "c",
         "typeinfo": "c",
-        "time.h": "c"
+        "time.h": "c",
+        "limits": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
