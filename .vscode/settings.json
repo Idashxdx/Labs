@@ -15,7 +15,8 @@
         "semaphore.h": "c",
         "typeinfo": "c",
         "time.h": "c",
-        "limits": "c"
+        "limits": "c",
+        "type_traits": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

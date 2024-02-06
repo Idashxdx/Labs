@@ -46,22 +46,8 @@ int valid_datetime(const char *datetime)
     }
     return 1;
 }
-check_data add_stop_to_route(RouteNode **head, int x, int y, Stops stop)
-{
-    RouteNode *newRouteNode = (RouteNode *)malloc(sizeof(RouteNode));
-    newRouteNode->next = NULL;
-    StopNode *newStopNode = (StopNode *)malloc(sizeof(StopNode));
-    newStopNode->value = stop;
-    newStopNode->next = NULL;
-    newStopNode->value.x = x;
-    newStopNode->value.y = y;
-    newRouteNode->route = newStopNode;
-    newRouteNode->next = *head;
-    *head = newRouteNode;
 
-    return correct_data;
-}
-check_data read_input(RouteNode **head, int count, char *files[])
+check_data read_input(RouteNode **route, int count, char *files[])
 {
     for (int i = 0; i < count; i++)
     {
@@ -72,28 +58,40 @@ check_data read_input(RouteNode **head, int count, char *files[])
         }
 
         int x, y;
-        if (fscanf(file, "%d %d", &x, &y) != 2)
-        {
-            fclose(file);
-            return incorrect_data;
-        }
+        fscanf(file, "%d %d", &x, &y);
 
+        char number[INPUT];
+        char stop_date[10];
+        char stop_time[9];
+        char departure_date[10];
+        char departure_time[9];
+        char marker[INPUT];
         Stops stop;
-        while (fscanf(file, "%s %s %s %s", stop.number, stop.stop_time, stop.departure_time, stop.marker) == 4)
+        while (fscanf(file, "%s %s %s %s %s %s", number, stop_date, stop_time, departure_date, departure_time, marker) != EOF)
         {
-            if (!valid_datetime(stop.stop_time) || !valid_datetime(stop.departure_time))
+            char *datetime_stop = strcat(stop_date, " ");
+            datetime_stop = strcat(datetime_stop, stop_time);
+            char *datetime_departure = strcat(departure_date, " ");
+            datetime_departure = strcat(datetime_departure, departure_time);
+
+            if (valid_datetime(datetime_stop) && valid_datetime(datetime_departure))
+            {
+                strcpy(stop.number, number);
+                strcpy(stop.stop_datetime, datetime_stop);
+                strcpy(stop.departure_datetime, datetime_departure);
+                strcpy(stop.marker, marker);
+                stop.x = x;
+                stop.y = y;
+               
+            }
+            else
             {
                 return incorrect_data;
             }
-            check_data result = add_stop_to_route(head, x, y, stop);
-            if (result != correct_data)
-            {
-                fclose(file);
-                return result;
-            }
         }
+
         fclose(file);
     }
+
     return correct_data;
 }
-

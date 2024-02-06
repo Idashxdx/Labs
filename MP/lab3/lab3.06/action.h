@@ -20,11 +20,11 @@ typedef enum check_data
 typedef struct
 {
     char number[INPUT];
-    char stop_time[20];
-    char departure_time[20];
+    char stop_datetime[20];
+    char departure_datetime[20];
     char marker[INPUT];
     int x; // coord.
-    int y;
+    int y; 
 } Stops;
 typedef struct StopNode
 {
@@ -36,9 +36,8 @@ typedef struct RouteNode
     StopNode route;
     struct RouteNode *next;
 } RouteNode;
+
+
 int valid_datetime(const char *datetime);
-check_data add_stop_to_route(RouteNode **head, int x, int y, Stops stop);
-check_data read_input(RouteNode **head, int count, char *files[]);
-void print_stops(StopNode *head);
-void free_route(RouteNode *head);
+check_data read_input(RouteNode **route, int count, char *files[]);
 #endif
