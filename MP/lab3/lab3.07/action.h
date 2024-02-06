@@ -23,10 +23,20 @@ typedef struct
     char gender;
     double income;
 } Liver;
+
+// одн.список
 typedef struct Node
 {
     Liver liver;
     struct Node *next;
 } Node;
 
+typedef struct Action
+{
+    Liver liver_act; 
+    char type; //добавление-удаление-изменение
+    struct Action *next;
+} Action;
+
+check_data read_input(FILE *file, Node **node, size_t *count, size_t *capacity);
 #endif
