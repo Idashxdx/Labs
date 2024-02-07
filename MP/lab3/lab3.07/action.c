@@ -5,7 +5,7 @@ int valid_date(const char *date)
     {
         return 0;
     }
-    if (date[2] != ':' || date[5] != ':')
+    if (date[2] != '.' || date[5] != '.')
     {
         return 0;
     }
@@ -91,7 +91,7 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
 }
 int compare_bdates(const char *date1, const char *date2)
 {
-    char separator = ':';
+    char separator = '.';
     int day1, month1, year1;
     int day2, month2, year2;
     sscanf(date1, "%d%c%d%c%d", &day1, &separator, &month1, &separator, &year1);
@@ -131,7 +131,7 @@ check_data read_input(FILE *file, Node **head)
             {
                 break;
             }
-            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d:%02d:%04d", day, month, year);
+            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d.%02d.%04d", day, month, year);
         }
         else
         {
@@ -139,7 +139,7 @@ check_data read_input(FILE *file, Node **head)
             {
                 break;
             }
-            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d:%02d:%04d", day, month, year);
+            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d.%02d.%04d", day, month, year);
             tmp_liver.patronymic[0] = '\0';
             if (fscanf(file, " %c %lf",
                        &tmp_liver.gender,
@@ -183,4 +183,157 @@ check_data read_input(FILE *file, Node **head)
         }
     }
     return correct_data;
+}
+Node *find_by_name(Node *head, char *str)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.name, str) == 0)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+
+Node *find_by_surname(Node *head, char *str)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.surname, str) == 0)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+Node *find_by_patronymic(Node *head, char *str)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.patronymic, str) == 0)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+Node *find_by_gender(Node *head, char gender)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (current->liver.gender == gender)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+
+Node *find_by_date(Node *head, char *str)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.BDate, str) == 0)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+Node *find_by_income(Node *head, double income)
+{
+    Node *result_found = NULL;
+    Node *current = head;
+    while (current != NULL)
+    {
+        if (current->liver.income == income)
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return NULL;
+            }
+            new_node->liver = current->liver;
+            new_node->next = result_found;
+            result_found = new_node;
+        }
+        current = current->next;
+    }
+    return result_found;
+}
+void print_node(Node *node)
+{
+    printf("%s %s %s; Bdate: %s; Gender: %c; Average income: %lf.\n",
+           node->liver.name, node->liver.surname, node->liver.patronymic,
+           node->liver.BDate, node->liver.gender, node->liver.income);
+}
+void print_all_find(Node *head)
+{
+    Node *current = head;
+    while (current != NULL)
+    {
+        print_node(current);
+        current = current->next;
+    }
+}
+void free_list(Node *head)
+{
+    Node *current = head;
+    while (current != NULL)
+    {
+        Node *tmp = current;
+        current = current->next;
+        free(tmp);
+    }
 }

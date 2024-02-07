@@ -32,16 +32,24 @@ typedef struct Node
     struct Node *next;
 } Node;
 
-typedef struct Action
+typedef struct Operation
 {
-    Liver liver_act; 
+    Liver oper_liver; 
     char type; //добавление-удаление-изменение
     struct Action *next;
-} Action;
+} Operation;
 
 int valid_date(const char *date);
 check_data valid_data(const char *name, const char *surname, const char *patronymic, const char *BDate, char gender, double income);
 int compare_bdates(const char *date1, const char *date2);
 check_data read_input(FILE *file, Node **head);
-//void print_list(Node *head);
+Node *find_by_name(Node *head, char *str);
+Node *find_by_surname(Node *head, char *str);
+Node *find_by_patronymic(Node *head, char *str);
+Node *find_by_gender(Node *head, char gender);
+Node *find_by_date(Node *head, char *str);
+Node *find_by_income(Node *head, double income);
+void print_node(Node *node);
+void print_all_find(Node *head);
+void free_list(Node *head);
 #endif
