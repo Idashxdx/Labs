@@ -247,7 +247,7 @@ void check_input(const char *print, char *input, int size, int valid)
         printf("%s", print);
         if (fgets(input, size, stdin))
         {
-            input[strcspn(input, "\n")] = '\0'; // Remove newline character
+            input[strcspn(input, "\n")] = '\0';
             if (strlen(input) >= size - 1)
             {
                 printf("Large size - please re-enter.\n");

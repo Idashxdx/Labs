@@ -17,13 +17,12 @@ int main(int argc, char *argv[])
             return 1;
         }
         Node *node = NULL;
-        // а надо ли нам отслеживание количиства?
-        size_t count = 0;
-        size_t capacity = 2;
-        switch (read_input(input_file, &node, &count, &capacity))
+        
+        switch (read_input(input_file, &node))
         {
         case correct_data:
             printf("File reading\n\n");
+            print_list(node);
             break;
         case memory_alloc_error:
             fclose(input_file);

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 
 typedef enum check_data
 {
@@ -19,7 +20,7 @@ typedef struct
     char name[50];
     char surname[50];
     char patronymic[50];
-    char BDate[10];
+    char BDate[11];
     char gender;
     double income;
 } Liver;
@@ -38,5 +39,8 @@ typedef struct Action
     struct Action *next;
 } Action;
 
-check_data read_input(FILE *file, Node **node, size_t *count, size_t *capacity);
+int valid_date(const char *date);
+check_data valid_data(const char *name, const char *surname, const char *patronymic, const char *BDate, char gender, double income);
+int compare_bdates(const char *date1, const char *date2);
+check_data read_input(FILE *file, Node **head);
 #endif
