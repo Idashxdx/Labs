@@ -80,9 +80,9 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
         return incorrect_data;
     }
     if (gender != 'M' && gender != 'W')
-{
-    return incorrect_data;
-}
+    {
+        return incorrect_data;
+    }
     if (income < 0)
     {
         return incorrect_data;
@@ -108,23 +108,46 @@ int compare_bdates(const char *date1, const char *date2)
 }
 check_data read_input(FILE *file, Node **head)
 {
-    *head = NULL; 
+    *head = NULL;
     while (1)
     {
         Liver tmp_liver;
         int day, month, year;
         char separator;
-        if (fscanf(file, "%s %s %s %d%c%d%c%d %c %lf",
+        if (fscanf(file, "%s %s %s",
                    tmp_liver.name,
                    tmp_liver.surname,
-                   tmp_liver.patronymic,
-                   &day, &separator, &month, &separator, &year,
-                   &tmp_liver.gender,
-                   &tmp_liver.income) != 10)
+                   tmp_liver.patronymic) < 3)
         {
             break;
         }
-        snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d:%02d:%04d", day, month, year);
+
+        if (isalpha(tmp_liver.patronymic[0]))
+        {
+            if (fscanf(file, " %d%c%d%c%d %c %lf",
+                       &day, &separator, &month, &separator, &year,
+                       &tmp_liver.gender,
+                       &tmp_liver.income) < 7)
+            {
+                break;
+            }
+            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d:%02d:%04d", day, month, year);
+        }
+        else
+        {
+            if (sscanf(tmp_liver.patronymic, "%d%c%d%c%d", &day, &separator, &month, &separator, &year) == EOF)
+            {
+                break;
+            }
+            snprintf(tmp_liver.BDate, sizeof(tmp_liver.BDate), "%02d:%02d:%04d", day, month, year);
+            tmp_liver.patronymic[0] = '\0';
+            if (fscanf(file, " %c %lf",
+                       &tmp_liver.gender,
+                       &tmp_liver.income) < 2)
+            {
+                break;
+            }
+        }
         if (valid_data(tmp_liver.name,
                        tmp_liver.surname,
                        tmp_liver.patronymic,
@@ -134,7 +157,6 @@ check_data read_input(FILE *file, Node **head)
         {
             return incorrect_data;
         }
-
         Node *new_node = (Node *)malloc(sizeof(Node));
         if (!new_node)
         {
@@ -162,30 +184,3 @@ check_data read_input(FILE *file, Node **head)
     }
     return correct_data;
 }
-void print_list(Node *head)
-{
-    Node *current = head;
-    while (current != NULL)
-    {
-        printf("Имя: %s\n", current->liver.name);
-        printf("Фамилия: %s\n", current->liver.surname);
-
-        // Проверка на пустое отчество
-        if (strlen(current->liver.patronymic) > 0)
-        {
-            printf("Отчество: %s\n", current->liver.patronymic);
-        }
-        else
-        {
-            printf("Отчество: нет\n");
-        }
-
-        printf("Дата рождения: %s\n", current->liver.BDate);
-        printf("Пол: %c\n", current->liver.gender);
-        printf("Средний доход: %lf\n", current->liver.income);
-        printf("\n");
-
-        current = current->next;
-    }
-}
-
