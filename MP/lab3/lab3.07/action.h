@@ -43,4 +43,5 @@ int valid_date(const char *date);
 check_data valid_data(const char *name, const char *surname, const char *patronymic, const char *BDate, char gender, double income);
 int compare_bdates(const char *date1, const char *date2);
 check_data read_input(FILE *file, Node **head);
+void print_list(Node *head);
 #endif

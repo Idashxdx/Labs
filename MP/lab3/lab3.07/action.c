@@ -47,13 +47,11 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
     {
         if (!isalpha(name[i]) || isspace(name[i]))
         {
-            printf("2\n");
             return incorrect_data;
         }
     }
     if (strlen(name) == 0)
     {
-        printf("3\n");
         return incorrect_data;
     }
     for (int i = 0; surname[i] != '\0'; i++)
@@ -73,19 +71,16 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
         {
             if (!isalpha(patronymic[i]) || isspace(patronymic[i]))
             {
-                printf("4\n");
                 return incorrect_data;
             }
         }
     }
     if (valid_date(BDate) == 0)
     {
-        printf("5\n");
         return incorrect_data;
     }
     if (gender != 'M' && gender != 'W')
 {
-    printf("6\n");
     return incorrect_data;
 }
     if (income < 0)
@@ -113,8 +108,7 @@ int compare_bdates(const char *date1, const char *date2)
 }
 check_data read_input(FILE *file, Node **head)
 {
-    *head = NULL; // Инициализация головного узла односвязного списка
-
+    *head = NULL; 
     while (1)
     {
         Liver tmp_liver;
@@ -171,10 +165,8 @@ check_data read_input(FILE *file, Node **head)
 void print_list(Node *head)
 {
     Node *current = head;
-    printf("6\n");
     while (current != NULL)
     {
-        printf("7\n");
         printf("Имя: %s\n", current->liver.name);
         printf("Фамилия: %s\n", current->liver.surname);
 
@@ -196,3 +188,4 @@ void print_list(Node *head)
         current = current->next;
     }
 }
+
