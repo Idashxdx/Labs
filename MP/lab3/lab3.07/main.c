@@ -310,6 +310,6 @@ int main(int argc, char *argv[])
         free_list(node);
         fclose(input_file);
     }
-    printf("M8O-211B-22  Mashrabova  lab3 tack6\n");
+    printf("M8O-211B-22  Mashrabova  lab3 tack7\n");
     return 0;
 }

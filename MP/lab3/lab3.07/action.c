@@ -390,6 +390,7 @@ check_data add_liver(Node **head, Operation **operation, int *counter_operation)
         return memory_alloc_error;
     }
     new_operation->oper_liver = new_liver;
+    new_operation->orig_liver = new_liver;
     // a-add;d-delete;c-change
     new_operation->type = 'A';
     new_operation->next = *operation;
@@ -444,6 +445,7 @@ check_data delete_liver(Node **head, Operation **operation, int *counter_operati
                 return memory_alloc_error;
             }
             new_operation->oper_liver = delete_liver;
+            new_operation->orig_liver = delete_liver;
             new_operation->type = 'D';
             new_operation->next = *operation;
             *operation = new_operation;
@@ -475,7 +477,7 @@ check_data change_liver(Node *head, Operation **operation, int *counter_operatio
     scanf("%lf", &old_liver.income);
     if (valid_data(old_liver.name, old_liver.surname, old_liver.patronymic, old_liver.BDate, old_liver.gender, old_liver.income) == incorrect_data)
     {
-        printf("Liver data no valid\n\n");
+        printf("Liver data not valid\n\n");
         return incorrect_data;
     }
     Node *current = head;
@@ -503,7 +505,7 @@ check_data change_liver(Node *head, Operation **operation, int *counter_operatio
             scanf("%lf", &new_liver.income);
             if (valid_data(new_liver.name, new_liver.surname, new_liver.patronymic, new_liver.BDate, new_liver.gender, new_liver.income) == incorrect_data)
             {
-                printf("Liver data no valid\n\n");
+                printf("New liver data not valid\n\n");
                 return incorrect_data;
             }
             Operation *new_operation = (Operation *)malloc(sizeof(Operation));
@@ -511,8 +513,8 @@ check_data change_liver(Node *head, Operation **operation, int *counter_operatio
             {
                 return memory_alloc_error;
             }
-            // мб проблема с undo тут???
-            new_operation->oper_liver = old_liver;
+            new_operation->oper_liver = new_liver;
+            new_operation->orig_liver = old_liver;
             new_operation->type = 'C';
             new_operation->next = *operation;
             *operation = new_operation;
@@ -528,7 +530,7 @@ check_data change_liver(Node *head, Operation **operation, int *counter_operatio
         }
         current = current->next;
     }
-    printf("Liver no founded\n\n");
+    printf("Liver not found\n\n");
     return incorrect_data;
 }
 check_data undo(Node **head, Operation **operation, int *counter_operation)
@@ -548,7 +550,12 @@ check_data undo(Node **head, Operation **operation, int *counter_operation)
 
             while (current != NULL)
             {
-                if (strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0)
+                if (strcmp(current->liver.name, last_operation->oper_liver.name) == 0 &&
+                    strcmp(current->liver.surname, last_operation->oper_liver.surname) == 0 &&
+                    strcmp(current->liver.patronymic, last_operation->oper_liver.patronymic) == 0 &&
+                    strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0 &&
+                    current->liver.gender == last_operation->oper_liver.gender &&
+                    current->liver.income == last_operation->oper_liver.income)
                 {
                     if (prev == NULL)
                     {
@@ -584,9 +591,19 @@ check_data undo(Node **head, Operation **operation, int *counter_operation)
             Node *current = *head;
             while (current != NULL)
             {
-                if (strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0)
+                if (strcmp(current->liver.name, last_operation->oper_liver.name) == 0 &&
+                    strcmp(current->liver.surname, last_operation->oper_liver.surname) == 0 &&
+                    strcmp(current->liver.patronymic, last_operation->oper_liver.patronymic) == 0 &&
+                    strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0 &&
+                    current->liver.gender == last_operation->oper_liver.gender &&
+                    current->liver.income == last_operation->oper_liver.income)
                 {
-                    current->liver = last_operation->oper_liver;
+                    strcpy(current->liver.name, last_operation->orig_liver.name);
+                    strcpy(current->liver.surname, last_operation->orig_liver.surname);
+                    strcpy(current->liver.patronymic, last_operation->orig_liver.patronymic);
+                    strcpy(current->liver.BDate, last_operation->orig_liver.BDate);
+                    current->liver.gender = last_operation->orig_liver.gender;
+                    current->liver.income = last_operation->orig_liver.income;
                     break;
                 }
 

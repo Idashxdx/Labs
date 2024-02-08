@@ -35,6 +35,7 @@ typedef struct Node
 typedef struct Operation
 {
     Liver oper_liver; 
+    Liver orig_liver;
     char type; //добавление-удаление-изменение
     struct Operation *next;
 } Operation;
