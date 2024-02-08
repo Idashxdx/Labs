@@ -16,7 +16,8 @@
         "typeinfo": "c",
         "time.h": "c",
         "limits": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "stack.h": "c"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }

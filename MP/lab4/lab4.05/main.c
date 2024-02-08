@@ -1,5 +1,3 @@
-
-
 #include "action.h"
 #include "stack.h"
 
