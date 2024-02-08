@@ -34,9 +34,9 @@ typedef struct Node
 
 typedef struct Operation
 {
-    Liver oper_liver; 
+    Liver oper_liver;
     Liver orig_liver;
-    char type; //добавление-удаление-изменение
+    char type; // добавление-удаление-изменение
     struct Operation *next;
 } Operation;
 
@@ -51,6 +51,7 @@ Node *find_by_gender(Node *head, char gender);
 Node *find_by_date(Node *head, char *str);
 Node *find_by_income(Node *head, double income);
 void print_node(Node *node);
+void print_file(FILE *file, Node *node);
 void print_all_find(Node *head);
 void free_list(Node *head);
 check_data add_liver(Node **head, Operation **operation, int *counter_operation);

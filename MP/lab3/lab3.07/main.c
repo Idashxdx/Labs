@@ -276,7 +276,26 @@ int main(int argc, char *argv[])
             else if (strcmp(act, "output") == 0)
             {
                 fgets(act, sizeof(act), stdin);
-                // доделать - функция печати в файл - как в 9-10?
+                char output[50];
+                printf("Enter file: ");
+                if (scanf("%s", output) != 1)
+                {
+                    printf("Enter a valid.\n\n");
+                    continue;
+                }
+                FILE *output_file = fopen(output, "w");
+                if (!output_file)
+                {
+                    printf("File 2 opening error\n");
+                    continue;
+                }
+                Node *current = node;
+                while (current != NULL)
+                {
+                    print_file(output_file, node);
+                    current = current->next;
+                }
+                fclose(output_file);
             }
             else if (strcmp(act, "undo") == 0)
             {

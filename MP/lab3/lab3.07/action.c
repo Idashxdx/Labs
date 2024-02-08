@@ -320,6 +320,12 @@ void print_node(Node *node)
            node->liver.name, node->liver.surname, node->liver.patronymic,
            node->liver.BDate, node->liver.gender, node->liver.income);
 }
+void print_file(FILE *file, Node *node)
+{
+    fprintf(file, "%s %s %s; Bdate: %s; Gender: %c; Average income: %lf.\n",
+            node->liver.name, node->liver.surname, node->liver.patronymic,
+            node->liver.BDate, node->liver.gender, node->liver.income);
+}
 void print_all_find(Node *head)
 {
     Node *current = head;
