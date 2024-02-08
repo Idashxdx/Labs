@@ -36,7 +36,7 @@ typedef struct Operation
 {
     Liver oper_liver; 
     char type; //добавление-удаление-изменение
-    struct Action *next;
+    struct Operation *next;
 } Operation;
 
 int valid_date(const char *date);
@@ -52,4 +52,8 @@ Node *find_by_income(Node *head, double income);
 void print_node(Node *node);
 void print_all_find(Node *head);
 void free_list(Node *head);
+check_data add_liver(Node **head, Operation **operation, int *counter_operation);
+check_data delete_liver(Node **head, Operation **operation, int *counter_operation);
+check_data change_liver(Node *head, Operation **operation, int *counter_operation);
+check_data undo(Node **head, Operation **operation, int *counter_operation);
 #endif

@@ -47,6 +47,7 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
     {
         if (!isalpha(name[i]) || isspace(name[i]))
         {
+
             return incorrect_data;
         }
     }
@@ -71,6 +72,7 @@ check_data valid_data(const char *name, const char *surname, const char *patrony
         {
             if (!isalpha(patronymic[i]) || isspace(patronymic[i]))
             {
+                printf("4");
                 return incorrect_data;
             }
         }
@@ -336,4 +338,272 @@ void free_list(Node *head)
         current = current->next;
         free(tmp);
     }
+}
+check_data add_liver(Node **head, Operation **operation, int *counter_operation)
+{
+    Liver new_liver;
+    printf("Enter details of the new liver:\n");
+    printf("Enter name: ");
+    scanf("%s", new_liver.name);
+    printf("Enter surname: ");
+    scanf("%s", new_liver.surname);
+    printf("Enter patronymic: ");
+    scanf("%s", new_liver.patronymic);
+    printf("Enter bdate (dd.mm.yyyy): ");
+    scanf("%s", new_liver.BDate);
+    printf("Enter gender (M/W): ");
+    scanf(" %c", &new_liver.gender);
+    printf("Enter average income: ");
+    scanf("%lf", &new_liver.income);
+    if (valid_data(new_liver.name, new_liver.surname, new_liver.patronymic, new_liver.BDate, new_liver.gender, new_liver.income) == incorrect_data)
+    {
+        return incorrect_data;
+    }
+    Node *new_node = (Node *)malloc(sizeof(Node));
+    if (!new_node)
+    {
+        return memory_alloc_error;
+    }
+    new_node->liver = new_liver;
+    Node *prev = NULL;
+    Node *current = *head;
+    while (current != NULL && compare_bdates(current->liver.BDate, new_liver.BDate) < 0)
+    {
+        prev = current;
+        current = current->next;
+    }
+
+    if (prev == NULL)
+    {
+        new_node->next = *head;
+        *head = new_node;
+    }
+    else
+    {
+        new_node->next = prev->next;
+        prev->next = new_node;
+    }
+    // Добавляем действие в стек операций
+    Operation *new_operation = (Operation *)malloc(sizeof(Operation));
+    if (!new_operation)
+    {
+        return memory_alloc_error;
+    }
+    new_operation->oper_liver = new_liver;
+    // a-add;d-delete;c-change
+    new_operation->type = 'A';
+    new_operation->next = *operation;
+    *operation = new_operation;
+    (*counter_operation)++;
+    return correct_data;
+}
+check_data delete_liver(Node **head, Operation **operation, int *counter_operation)
+{
+    Liver delete_liver;
+    printf("Enter details of the liver to delete:\n");
+    printf("Enter name: ");
+    scanf("%s", delete_liver.name);
+    printf("Enter surname: ");
+    scanf("%s", delete_liver.surname);
+    printf("Enter patronymic: ");
+    scanf("%s", delete_liver.patronymic);
+    printf("Enter birth date (dd.mm.yyyy): ");
+    scanf("%s", delete_liver.BDate);
+    printf("Enter gender (M/W): ");
+    scanf(" %c", &delete_liver.gender);
+    printf("Enter average income: ");
+    scanf("%lf", &delete_liver.income);
+    if (valid_data(delete_liver.name, delete_liver.surname, delete_liver.patronymic, delete_liver.BDate, delete_liver.gender, delete_liver.income) == incorrect_data)
+    {
+        printf("Liver data no valid\n\n");
+        return incorrect_data;
+    }
+    Node *current = *head;
+    Node *prev = NULL;
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.name, delete_liver.name) == 0 &&
+            strcmp(current->liver.surname, delete_liver.surname) == 0 &&
+            strcmp(current->liver.patronymic, delete_liver.patronymic) == 0 &&
+            strcmp(current->liver.BDate, delete_liver.BDate) == 0 &&
+            current->liver.gender == delete_liver.gender &&
+            current->liver.income == delete_liver.income)
+        {
+            if (prev == NULL)
+            {
+                *head = current->next;
+            }
+            else
+            {
+                prev->next = current->next;
+            }
+            free(current);
+            Operation *new_operation = (Operation *)malloc(sizeof(Operation));
+            if (!new_operation)
+            {
+                return memory_alloc_error;
+            }
+            new_operation->oper_liver = delete_liver;
+            new_operation->type = 'D';
+            new_operation->next = *operation;
+            *operation = new_operation;
+            (*counter_operation)++;
+            return correct_data;
+        }
+
+        prev = current;
+        current = current->next;
+    }
+    printf("Liver no founded\n\n");
+    return incorrect_data;
+}
+check_data change_liver(Node *head, Operation **operation, int *counter_operation)
+{
+    Liver old_liver, new_liver;
+    printf("Enter details of the liver you want to change:\n");
+    printf("Enter name: ");
+    scanf("%s", old_liver.name);
+    printf("Enter surname: ");
+    scanf("%s", old_liver.surname);
+    printf("Enter patronymic: ");
+    scanf("%s", old_liver.patronymic);
+    printf("Enter birth date (dd.mm.yyyy): ");
+    scanf("%s", old_liver.BDate);
+    printf("Enter gender (M/W): ");
+    scanf(" %c", &old_liver.gender);
+    printf("Enter average income: ");
+    scanf("%lf", &old_liver.income);
+    if (valid_data(old_liver.name, old_liver.surname, old_liver.patronymic, old_liver.BDate, old_liver.gender, old_liver.income) == incorrect_data)
+    {
+        printf("Liver data no valid\n\n");
+        return incorrect_data;
+    }
+    Node *current = head;
+
+    while (current != NULL)
+    {
+        if (strcmp(current->liver.name, old_liver.name) == 0 &&
+            strcmp(current->liver.surname, old_liver.surname) == 0 &&
+            strcmp(current->liver.patronymic, old_liver.patronymic) == 0 &&
+            strcmp(current->liver.BDate, old_liver.BDate) == 0 &&
+            current->liver.gender == old_liver.gender &&
+            current->liver.income == old_liver.income)
+        {
+            printf("Enter new name: ");
+            scanf("%s", new_liver.name);
+            printf("Enter new surname: ");
+            scanf("%s", new_liver.surname);
+            printf("Enter new patronymic: ");
+            scanf("%s", new_liver.patronymic);
+            printf("Enter new birth date (dd.mm.yyyy): ");
+            scanf("%s", new_liver.BDate);
+            printf("Enter new gender (M/W): ");
+            scanf(" %c", &new_liver.gender);
+            printf("Enter new average income: ");
+            scanf("%lf", &new_liver.income);
+            if (valid_data(new_liver.name, new_liver.surname, new_liver.patronymic, new_liver.BDate, new_liver.gender, new_liver.income) == incorrect_data)
+            {
+                printf("Liver data no valid\n\n");
+                return incorrect_data;
+            }
+            Operation *new_operation = (Operation *)malloc(sizeof(Operation));
+            if (!new_operation)
+            {
+                return memory_alloc_error;
+            }
+            // мб проблема с undo тут???
+            new_operation->oper_liver = old_liver;
+            new_operation->type = 'C';
+            new_operation->next = *operation;
+            *operation = new_operation;
+            (*counter_operation)++;
+            strcpy(current->liver.name, new_liver.name);
+            strcpy(current->liver.surname, new_liver.surname);
+            strcpy(current->liver.patronymic, new_liver.patronymic);
+            strcpy(current->liver.BDate, new_liver.BDate);
+            current->liver.gender = new_liver.gender;
+            current->liver.income = new_liver.income;
+
+            return correct_data;
+        }
+        current = current->next;
+    }
+    printf("Liver no founded\n\n");
+    return incorrect_data;
+}
+check_data undo(Node **head, Operation **operation, int *counter_operation)
+{
+    int num_operations_to_undo = *counter_operation / 2;
+    Operation *prev_operation = NULL;
+
+    while (num_operations_to_undo > 0 && *operation != NULL)
+    {
+        Operation *last_operation = *operation;
+        *operation = last_operation->next;
+
+        if (last_operation->type == 'A')
+        {
+            Node *current = *head;
+            Node *prev = NULL;
+
+            while (current != NULL)
+            {
+                if (strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0)
+                {
+                    if (prev == NULL)
+                    {
+                        *head = current->next;
+                    }
+                    else
+                    {
+                        prev->next = current->next;
+                    }
+
+                    free(current);
+                    break;
+                }
+
+                prev = current;
+                current = current->next;
+            }
+        }
+        else if (last_operation->type == 'D')
+        {
+            Node *new_node = (Node *)malloc(sizeof(Node));
+            if (!new_node)
+            {
+                return memory_alloc_error;
+            }
+            new_node->liver = last_operation->oper_liver;
+            new_node->next = *head;
+            *head = new_node;
+        }
+        // неправильно
+        else if (last_operation->type == 'C')
+        {
+            Node *current = *head;
+            while (current != NULL)
+            {
+                if (strcmp(current->liver.BDate, last_operation->oper_liver.BDate) == 0)
+                {
+                    current->liver = last_operation->oper_liver;
+                    break;
+                }
+
+                current = current->next;
+            }
+        }
+
+        free(last_operation);
+        prev_operation = last_operation;
+        num_operations_to_undo--;
+        (*counter_operation)--;
+    }
+
+    if (prev_operation)
+    {
+        prev_operation->next = *operation;
+    }
+
+    return correct_data;
 }

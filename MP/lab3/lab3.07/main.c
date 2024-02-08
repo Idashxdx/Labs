@@ -221,22 +221,82 @@ int main(int argc, char *argv[])
             else if (strcmp(act, "add") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                switch (add_liver(&node, &operation, &counter_operation))
+                {
+                case correct_data:
+                    printf("Liver added\n\n");
+                    print_all_find(node);
+                    break;
+                case memory_alloc_error:
+                    free_list(node);
+                    fclose(input_file);
+                    printf("Memory allocation error\n");
+                    return 1;
+                default:
+                    printf("Incorrect data\n");
+                    continue;
+                }
             }
             else if (strcmp(act, "delete") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                switch (delete_liver(&node, &operation, &counter_operation))
+                {
+                case correct_data:
+                    printf("Liver deleted\n\n");
+                    print_all_find(node);
+                    break;
+                case incorrect_data:
+                    break;
+                case memory_alloc_error:
+                    free_list(node);
+                    fclose(input_file);
+                    printf("Memory allocation error\n");
+                    return 1;
+                }
             }
             else if (strcmp(act, "change") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                switch (change_liver(node, &operation, &counter_operation))
+                {
+                case correct_data:
+                    printf("Liver changed\n\n");
+                    print_all_find(node);
+                    break;
+                case incorrect_data:
+                    break;
+                case memory_alloc_error:
+                    free_list(node);
+                    fclose(input_file);
+                    printf("Memory allocation error\n");
+                    return 1;
+                }
             }
             else if (strcmp(act, "output") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                // доделать - функция печати в файл - как в 9-10?
             }
             else if (strcmp(act, "undo") == 0)
             {
                 fgets(act, sizeof(act), stdin);
+                fgets(act, sizeof(act), stdin);
+                switch (undo(&node, &operation, &counter_operation))
+                {
+                case correct_data:
+                    printf("Last N/2 operations undone\n\n");
+                    print_all_find(node);
+                    break;
+                case incorrect_data:
+                    printf("No operations\n\n");
+                    break;
+                case memory_alloc_error:
+                    free_list(node);
+                    fclose(input_file);
+                    printf("Memory allocation error\n");
+                    return 1;
+                }
             }
             else if (strcmp(act, "exit") == 0)
             {
