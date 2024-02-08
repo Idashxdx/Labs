@@ -3,7 +3,7 @@ int main(int argc, char *argv[])
 {
     if (argc != 3)
     {
-        printf("Usage: %s input_file output_file\n", argv[0]);
+        printf("Enter input_file output_file\n");
         return 1;
     }
     FILE *input;
