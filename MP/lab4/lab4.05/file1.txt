@@ -1,0 +1,4 @@
+String 1++2; Number:1 ---> Not a correct expression.
+String ((3+3)*3)); Number:2 ---> The balance of the brackets is broken.
+String --11; Number:3 ---> Not a correct expression.
+String -; Number:7 ---> Not a correct expression.

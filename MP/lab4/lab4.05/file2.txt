@@ -1,0 +1,6 @@
+String 10/0; Number:0 ---> div by zero.
+String 3^-2; Number:1 ---> negative degree.
+String aaa; Number:2 ---> Not a correct symbol.
+String +; Number:3 ---> Not a correct expression.
+String (; Number:4 ---> The balance of the brackets is broken.
+String 3^(-2); Number:5 ---> negative degree.
