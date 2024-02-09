@@ -6,8 +6,8 @@ int main(int argc, char *argv[])
         printf("Enter files\n");
         return 1;
     }
-    int count = argc-1;
-    switch (read_input(count, argv+1))
+    int count = argc - 1;
+    switch (read_input(count, argv + 1))
     {
     case correct_data:
         printf("Files reading\n");

@@ -64,7 +64,6 @@ int bracket_balance(char *str)
         return 0;
     }
 }
-
 int priority_operators(char operator)
 {
     switch (operator)
@@ -132,10 +131,9 @@ check_data conversion_to_postfix(char *str, char **postfix)
                 p += sprintf(*postfix + p, "%d ", number);
             }
         }
-
         else if (symbol == ' ')
         {
-            continue; // Пропустить пробелы
+            continue;
         }
         else if (symbol == '(')
         {
@@ -164,7 +162,7 @@ check_data conversion_to_postfix(char *str, char **postfix)
             if (stack->top == NULL || stack->top->operator!= '(')
             {
                 free_stack(stack);
-                return incorrect_data; // Несбалансированные скобки
+                return incorrect_data;
             }
             pop_result = pop(stack, &data, &operator);
             if (pop_result != correct_data)
@@ -196,8 +194,6 @@ check_data conversion_to_postfix(char *str, char **postfix)
             }
         }
     }
-
-    // Обработка оставшихся элементов в стеке
     while (stack->top != NULL)
     {
         pop(stack, &data, &operator);
@@ -207,7 +203,6 @@ check_data conversion_to_postfix(char *str, char **postfix)
         p++;
     }
     (*postfix)[p] = '\0';
-
     free_stack(stack);
     return correct_data;
 }
@@ -248,7 +243,7 @@ check_data calculation(char *str, int *result)
             if (stack->top == NULL)
             {
                 free_stack(stack);
-                return incorrect_data; // Не хватает операндов
+                return incorrect_data;
             }
             pop_result = pop(stack, &data2, &operator);
             if (pop_result != correct_data)
@@ -290,7 +285,7 @@ check_data calculation(char *str, int *result)
                 if (data2 == 0)
                 {
                     free_stack(stack);
-                    return div_by_zero; // Деление на ноль
+                    return div_by_zero;
                 }
                 tmp_result = data1 % data2;
                 break;
@@ -304,7 +299,7 @@ check_data calculation(char *str, int *result)
                 break;
             default:
                 free_stack(stack);
-                return incorrect_data; // Неподдерживаемый оператор
+                return incorrect_data;
             }
             push_result = push(stack, tmp_result, '\0');
             if (push_result != correct_data)
@@ -314,16 +309,17 @@ check_data calculation(char *str, int *result)
             }
         }
     }
-
     if (stack->top == NULL)
     {
         free_stack(stack);
         return incorrect_data; // Не хватает операндов
     }
-
-    // Получение окончательного результата
-    pop(stack, result, &operator);
-
+    pop_result = pop(stack, result, &operator);
+    if (pop_result != correct_data)
+    {
+        free_stack(stack);
+        return pop_result;
+    }
     free_stack(stack);
     return correct_data;
 }
@@ -338,7 +334,6 @@ check_data read_input(int count, char *files[])
         {
             return file_open_error;
         }
-
         // Создаем файл для вывода
         count_file_output++;
         char *name_file_output = (char *)malloc(12 * sizeof(char));
@@ -355,10 +350,9 @@ check_data read_input(int count, char *files[])
             free(name_file_output);
             return file_open_error;
         }
-
         char *str = NULL;
         size_t size = 0;
-        int count_str = 0; // Переместить сюда для корректного отслеживания номера строки
+        int count_str = 0;
         char *postfix = NULL;
         int result_calculation;
 
@@ -372,7 +366,6 @@ check_data read_input(int count, char *files[])
                     str[j] = '\0';
                 }
             }
-
             // Баланс скобок
             if (bracket_balance(str) == 0)
             {
@@ -380,7 +373,6 @@ check_data read_input(int count, char *files[])
                 count_str++;
                 continue;
             }
-
             postfix = (char *)malloc(size * 2 * sizeof(char));
             if (!postfix)
             {
@@ -390,7 +382,6 @@ check_data read_input(int count, char *files[])
                 fclose(file_output);
                 return memory_alloc_error;
             }
-
             switch (conversion_to_postfix(str, &postfix))
             {
             case memory_alloc_error:
@@ -403,7 +394,7 @@ check_data read_input(int count, char *files[])
             case incorrect_data:
                 fprintf(file_output, "String %s; Number:%d ---> Not a correct symbol.\n", str, count_str);
                 free(postfix);
-                count_str++; // Переместили сюда для корректного номера строки
+                count_str++;
                 continue;
             case stack_is_empty:
                 free(str);
@@ -413,7 +404,6 @@ check_data read_input(int count, char *files[])
                 fclose(file_output);
                 return stack_is_empty; // Ошибка при извлечении со стека
             }
-
             switch (calculation(postfix, &result_calculation))
             {
             case memory_alloc_error:
@@ -425,7 +415,7 @@ check_data read_input(int count, char *files[])
             case incorrect_data: // Не хватает операндов
                 fprintf(file_output, "String %s; Number:%d ---> Not a correct expression.\n", str, count_str);
                 free(postfix);
-                count_str++; // Переместили сюда для корректного номера строки
+                count_str++;
                 continue;
             case div_by_zero:
                 fprintf(file_output, "String %s; Number:%d ---> div by zero.\n", str, count_str);
@@ -445,11 +435,9 @@ check_data read_input(int count, char *files[])
                 fclose(file_output);
                 return stack_is_empty;
             }
-
             printf("File name: %s; expression: %s; postfix: %s; calculated result = %d\n", file_input_name, str, postfix, result_calculation);
-
             free(postfix);
-            count_str++; // Переместили сюда для корректного номера строки
+            count_str++;
         }
 
         free(str);
@@ -457,6 +445,5 @@ check_data read_input(int count, char *files[])
         fclose(file_input);
         fclose(file_output);
     }
-
     return correct_data;
 }
