@@ -206,7 +206,6 @@ check_data conversion_to_postfix(char *str, char **postfix)
     free_stack(stack);
     return correct_data;
 }
-
 check_data calculation(char *str, int *result)
 {
     Stack *stack = (Stack *)malloc(sizeof(Stack));
