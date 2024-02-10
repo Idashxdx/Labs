@@ -69,13 +69,10 @@ int priority_operators(char operator)
     switch (operator)
     {
     case '+':
-        return 1;
     case '-':
         return 1;
     case '*':
-        return 2;
     case '/':
-        return 2;
     case '%':
         return 2;
     case '^':
@@ -95,8 +92,7 @@ check_data conversion_to_postfix(char *str, char **postfix)
     int length = strlen(str);
     int data, number;
     char operator, symbol;
-    int p = 0; // postfix position
-    int is_last_digit = 0;
+    int position = 0; // postfix position
     check_data push_result, pop_result;
     for (int i = 0; i < length; i++)
     {
@@ -118,7 +114,7 @@ check_data conversion_to_postfix(char *str, char **postfix)
                     number = number * 10 + (str[i] - '0');
                 }
                 number *= -1;
-                p += sprintf(*postfix + p, "0 %d - ", abs(number));
+                position += sprintf(*postfix + position, "0 %d - ", abs(number));
             }
             else
             {
@@ -128,7 +124,7 @@ check_data conversion_to_postfix(char *str, char **postfix)
                     i++;
                     number = number * 10 + (str[i] - '0');
                 }
-                p += sprintf(*postfix + p, "%d ", number);
+                position += sprintf(*postfix + position, "%d ", number);
             }
         }
         else if (symbol == ' ')
@@ -154,10 +150,10 @@ check_data conversion_to_postfix(char *str, char **postfix)
                     free_stack(stack);
                     return pop_result;
                 }
-                (*postfix)[p] = operator;
-                p++;
-                (*postfix)[p] = ' ';
-                p++;
+                (*postfix)[position] = operator;
+                position++;
+                (*postfix)[position] = ' ';
+                position++;
             }
             if (stack->top == NULL || stack->top->operator!= '(')
             {
@@ -181,10 +177,10 @@ check_data conversion_to_postfix(char *str, char **postfix)
                     free_stack(stack);
                     return pop_result;
                 }
-                (*postfix)[p] = operator;
-                p++;
-                (*postfix)[p] = ' ';
-                p++;
+                (*postfix)[position] = operator;
+                position++;
+                (*postfix)[position] = ' ';
+                position++;
             }
             push_result = push(stack, 0, symbol);
             if (push_result != correct_data)
@@ -197,12 +193,12 @@ check_data conversion_to_postfix(char *str, char **postfix)
     while (stack->top != NULL)
     {
         pop(stack, &data, &operator);
-        (*postfix)[p] = operator;
-        p++;
-        (*postfix)[p] = ' ';
-        p++;
+        (*postfix)[position] = operator;
+        position++;
+        (*postfix)[position] = ' ';
+        position++;
     }
-    (*postfix)[p] = '\0';
+    (*postfix)[position] = '\0';
     free_stack(stack);
     return correct_data;
 }
@@ -370,6 +366,7 @@ check_data read_input(int count, char *files[])
             {
                 fprintf(file_output, "String %s; Number:%d ---> The balance of the brackets is broken.\n", str, count_str);
                 count_str++;
+                free(str);
                 continue;
             }
             postfix = (char *)malloc(size * 2 * sizeof(char));
@@ -393,6 +390,7 @@ check_data read_input(int count, char *files[])
             case incorrect_data:
                 fprintf(file_output, "String %s; Number:%d ---> Not a correct symbol.\n", str, count_str);
                 free(postfix);
+                free(str);
                 count_str++;
                 continue;
             case stack_is_empty:
@@ -414,16 +412,19 @@ check_data read_input(int count, char *files[])
             case incorrect_data: // Не хватает операндов
                 fprintf(file_output, "String %s; Number:%d ---> Not a correct expression.\n", str, count_str);
                 free(postfix);
+                free(str);
                 count_str++;
                 continue;
             case div_by_zero:
                 fprintf(file_output, "String %s; Number:%d ---> div by zero.\n", str, count_str);
                 free(postfix);
+                free(str);
                 count_str++;
                 continue;
             case negative_degree:
                 fprintf(file_output, "String %s; Number:%d ---> negative degree.\n", str, count_str);
                 free(postfix);
+                free(str);
                 count_str++;
                 continue;
             case stack_is_empty:
