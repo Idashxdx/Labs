@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <stdbool.h>
 #include <math.h>
 
 typedef enum check_data
@@ -13,6 +14,7 @@ typedef enum check_data
     correct_data,
     file_open_error,
     stack_is_empty,
+    no_brackets,
     incorrect_data,
     memory_alloc_error
 
@@ -27,24 +29,20 @@ typedef struct Node
 } Node;
 typedef struct Stack
 {
-    char operator;
+    void *current;
     struct Stack *next;
 } Stack;
 
-void free_stack(Stack *stack);//+
-check_data push(Stack **stack, char operator); //+
-check_data pop(Stack **stack, char *operator); //+
-
-int bracket_balance(char *str);//+
-int priority_operators(char operator);//+
-
-
-Node *create_node(char data);//+
-Node *create_tree(char *postfix);
-
+void free_stack(Stack *stack);
+void free_tree(Node *node);                 //+
+check_data push(Stack **stack, void *data); //+
+check_data pop(Stack **stack, void **data); //+
+check_data create_node(Node **node, const char data, Node *left, Node *right);
+void print_tree(Node *node, int level);
+int bracket_balance(char *str);        //+
+int priority_operators(char operator); //+
 check_data conversion_to_postfix(char *str, char **postfix);
-int evaluate(Node *node, int values);
-void print_table(Node *root, int variables_count, char *variables);
+check_data create_tree(Node **root, char *postfix);
 check_data read_input(char *file);
 
 #endif

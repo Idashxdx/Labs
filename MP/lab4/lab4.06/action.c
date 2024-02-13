@@ -1,271 +1,362 @@
 #include "action.h"
 
-void free_stack(Stack *stack) {
-    while (stack != NULL) {
-        Stack *tmp = stack;
-        stack = stack->next;
-        free(tmp);
+void free_stack(Stack *stack)
+{
+    if (!stack)
+    {
+        return;
     }
+    free_stack(stack->next);
+    free(stack);
 }
-
-check_data push(Stack **stack, char operator) {
+void free_tree(Node *node)
+{
+    if (!node)
+    {
+        return;
+    }
+    free_tree(node->left);
+    free_tree(node->right);
+    free(node);
+}
+check_data push(Stack **stack, void *data)
+{
     Stack *new_node = (Stack *)malloc(sizeof(Stack));
-    if (!new_node) {
+    if (!new_node)
+    {
         return memory_alloc_error;
     }
 
-    new_node->operator = operator;
-    new_node->next = *stack;
-    *stack = new_node;
-
+    new_node->current = data;
+    new_node->next = (*stack);
+    (*stack) = new_node;
     return correct_data;
 }
-
-check_data pop(Stack **stack, char *operator) {
-    if (*stack == NULL) {
+check_data pop(Stack **stack, void **data)
+{
+    if ((*stack) == NULL)
+    {
         return stack_is_empty;
     }
 
-    Stack *top_node = *stack;
-    *operator = top_node->operator;
-    *stack = top_node->next;
+    Stack *top_node = (*stack);
+    (*stack) = top_node->next;
+    (*data) = top_node->current;
     free(top_node);
-
     return correct_data;
 }
-
-int bracket_balance(char *str) {
+check_data create_node(Node **node, const char data, Node *left, Node *right)
+{
+    if (*node)
+    {
+        return stack_is_empty;
+    }
+    *node = (Node *)malloc(sizeof(Node));
+    if (!(*node))
+    {
+        return memory_alloc_error;
+    }
+    (*node)->data = data;
+    (*node)->left = left;
+    (*node)->right = right;
+    return correct_data;
+}
+int bracket_balance(char *str)
+{
     int length = strlen(str);
     int bracket = 0;
-    for (int i = 0; i < length; i++) {
-        if (str[i] == '(') {
+    for (int i = 0; i < length; i++)
+    {
+        if (str[i] == '(')
+        {
             bracket++;
-        } else if (str[i] == ')') {
+        }
+        else if (str[i] == ')')
+        {
             bracket--;
-            if (bracket < 0) {
+            if (bracket < 0)
+            {
                 return 0;
             }
         }
     }
     return bracket == 0;
 }
-
-int priority_operators(char operator) {
-    switch (operator) {
-        case '|':
-        case '>':
-        case '<':
-        case '=':
-            return 1;
-        case '?':
-        case '!':
-        case '+':
-        case '&':
-            return 2;
-        case '~':
-            return 3;
-        default:
-            return 0;
+int priority_operators(char operator)
+{
+    switch (operator)
+    {
+    case '|':
+    case '>':
+    case '<':
+    case '=':
+        return 1;
+    case '?':
+    case '!':
+    case '+':
+    case '&':
+        return 2;
+    case '~':
+        return 3;
+    default:
+        return -1;
     }
 }
-
-Node *create_node(char data) {
-    Node *new_node = (Node *)malloc(sizeof(Node));
-    if (!new_node) {
-        return NULL;
-    }
-    new_node->data = data;
-    new_node->left = NULL;
-    new_node->right = NULL;
-    return new_node;
-}
-
-check_data conversion_to_postfix(char *str, char **postfix) {
-    Stack *stack = NULL;
+check_data conversion_to_postfix(char *str, char **postfix)
+{
     int length = strlen(str);
-    char *output = (char *)malloc((length + 1) * sizeof(char));
-
-    if (!output) {
+    char *result = (char *)malloc(sizeof(char) * (length + 1));
+    if (!result)
+    {
         return memory_alloc_error;
     }
-
-    output[0] = '\0';
-    int output_index = 0;
-
-    for (int i = 0; i < length; i++) {
-        char symbol = str[i];
-
-        if (symbol == ' ') {
+    Stack *stack = NULL;
+    int p = 0;
+    check_data push_result, pop_result;
+    for (int i = 0; i < length; i++)
+    {
+        if (str[i] == ' ' || str[i] == '\n' || str[i] == '\t')
+        {
             continue;
         }
-
-        if (isalpha(symbol) || isdigit(symbol)) {
-            output[output_index++] = symbol;
-        } else if (symbol == '(') {
-            push(&stack, symbol);
-        } else if (symbol == ')') {
-            while (stack && stack->operator != '(') {
-                char top_op;
-                pop(&stack, &top_op);
-                output[output_index++] = top_op;
+        if (isalpha(str[i]) || str[i] == '0' || str[i] == '1')
+        {
+            result[p] = str[i];
+            p++;
+        }
+        else
+        {
+            if (str[i] == ')')
+            {
+                while (1)
+                {
+                    void *current = NULL;
+                    pop_result = pop(&stack, &current);
+                    if (pop_result != correct_data)
+                    {
+                        free(result);
+                        free_stack(stack);
+                        return pop_result;
+                    }
+                    char current_char = *(char *)current;
+                    if (current_char == '(')
+                    {
+                        break;
+                    }
+                    result[p] = current_char;
+                    p++;
+                }
             }
-
-            if (stack && stack->operator == '(') {
-                char discard_op;
-                pop(&stack, &discard_op); // Discard the '('
+            else if (str[i] == '(')
+            {
+                push_result = push(&stack, &str[i]);
+                if (push_result != correct_data)
+                {
+                    free(result);
+                    free_stack(stack);
+                    return push_result;
+                }
             }
-        } else {
-            while (stack && priority_operators(stack->operator) >= priority_operators(symbol)) {
-                char top_op;
-                pop(&stack, &top_op);
-                output[output_index++] = top_op;
+            else
+            {
+                if (str[i] == '+' || str[i] == '-' || str[i] == '<')
+                {
+                    if (str[i + 1] != '>')
+                    {
+                        return incorrect_data;
+                    }
+                }
+                if (str[i] == '>')
+                {
+                    if (str[i - 1] != '+' && str[i - 1] != '-' && str[i - 1] != '<')
+                    {
+                        return incorrect_data;
+                    }
+                    continue;
+                }
+                int priority = priority_operators(str[i]);
+                if (priority == -1)
+                {
+                    free_stack(stack);
+                    free(result);
+                    return incorrect_data;
+                }
+                while (stack && priority_operators(*(char *)(stack->current)) > priority)
+                {
+                    void *current = NULL;
+                    if (pop(&stack, &current) == stack_is_empty)
+                    {
+                        break;
+                    }
+                    char current_char = *(char *)current;
+                    result[p] = current_char;
+                    p++;
+                }
+                push_result = push(&stack, &str[i]);
+                if (push_result != correct_data)
+                {
+                    free(result);
+                    free_stack(stack);
+                    return push_result;
+                }
             }
-
-            push(&stack, symbol);
         }
     }
-
-    while (stack) {
-        char top_op;
-        pop(&stack, &top_op);
-        output[output_index++] = top_op;
+    void *current = NULL;
+    while (pop(&stack, &current) != stack_is_empty)
+    {
+        char current_char = *(char *)current;
+        if (current_char == '(')
+        {
+            free_stack(stack);
+            free(result);
+            return incorrect_data;
+        }
+        result[p] = current_char;
+        p++;
     }
 
-    output[output_index] = '\0';
-    *postfix = output;
+    result[p] = '\0';
+    free_stack(stack);
+    *postfix = result;
     return correct_data;
 }
-
-Node *create_tree(char *postfix)
+check_data create_tree(Node **root, char *postfix)
 {
+    int length = strlen(postfix);
     Stack *stack = NULL;
-
-    for (int i = 0; i < strlen(postfix); i++)
+    check_data push_result, pop_result;
+    for (int i = 0; i < length; i++)
     {
-        if (isalpha(postfix[i]) || isdigit(postfix[i]))
+        if (isalpha(postfix[i]) || postfix[i] == '0' || postfix[i] == '1')
         {
-            Node *new_node = create_node(postfix[i]);
-            if (!new_node)
+            Node *new_node = NULL;
+            if (create_node(&new_node, postfix[i], NULL, NULL) != correct_data)
             {
                 free_stack(stack);
-                return NULL;
+                return memory_alloc_error;
             }
-
-            if (push(&stack, new_node->data) != correct_data)
+            push_result = push(&stack, new_node);
+            if (push_result != correct_data)
             {
                 free_stack(stack);
-                free(new_node);
-                return NULL;
+                return push_result;
             }
         }
         else
         {
-            char operator = postfix[i];
-            Node *new_operator = create_node(operator);
-            if (!new_operator)
+            Node *result_node = NULL;
+            Node *data1, *data2;
+            check_data result;
+            if (postfix[i] == '~')
             {
-                free_stack(stack);
-                return NULL;
+                result = create_node(&result_node, postfix[i], data1, NULL);
             }
-
-            Node *right_node = NULL, *left_node = NULL;
-
-            char right_data, left_data;
-            if (pop(&stack, &right_data) != correct_data || pop(&stack, &left_data) != correct_data)
+            else
             {
-                free_stack(stack);
-                free(new_operator);
-                return NULL;
+                pop_result = pop(&stack, (void **)&data2);
+                if (pop_result != correct_data)
+                {
+                    free_stack(stack);
+                    return pop_result;
+                }
+
+                pop_result = pop(&stack, (void **)&data1);
+                if (pop_result != correct_data)
+                {
+                    free_stack(stack);
+                    return pop_result;
+                }
+                result = create_node(&result_node, postfix[i], data2, data1);
             }
-            
-            right_node = create_node(right_data);
-            left_node = create_node(left_data);
-
-            new_operator->right = right_node;
-            new_operator->left = left_node;
-
-            if (push(&stack, new_operator->data) != correct_data)
+            if (result != correct_data)
             {
                 free_stack(stack);
-                free(new_operator);
-                return NULL;
+                return result;
+            }
+            push_result = push(&stack, &result_node);
+            if (push_result != correct_data)
+            {
+                free_stack(stack);
+                return push_result;
             }
         }
     }
-
-    if (!stack || !stack->next) // Ошибка в количестве элементов в стеке
+    void *current = NULL;
+    if (pop(&stack, &current) == stack_is_empty)
     {
         free_stack(stack);
-        return NULL;
+        return stack_is_empty;
     }
-
-    Node *root = create_node(stack->operator); // Предполагая, что вершина стека - это корневой оператор
-    free(stack);
-    return root;
+    *root = (Node *)current;
+    if (stack)
+    {
+        free_stack(stack);
+        return incorrect_data;
+    }
+    return correct_data;
 }
-int evaluate(Node *node, int values)
+// Функция для вычисления значения булевой переменной по ее имени и позиции в таблице
+bool eval_variable(char name, int index)
 {
-    if (!node)
-    {
-        return -1; // Maybe needs a different error value
-    }
-
-    if (isalpha(node->data) || isdigit(node->data))
-    {
-        return (values >> (node->data - 'A')) & 1;
-    }
-    else
-    {
-        int left = evaluate(node->left, values);
-        int right = evaluate(node->right, values);
-
-        switch (node->data)
-        {
-        case '~':
-            return !left;
-        case '&':
-            return left && right;
-        case '|':
-            return left || right;
-        case '-':
-            return !left || right;
-        case '+':
-            return left || !right;
-        case '<':
-            return (left || right) && !(left && right);
-        case '=':
-            return left == right;
-        case '!':
-            return !(left && right);
-        case '?':
-            return !(left || right);
-        default:
-            return -1; // Maybe needs a different error value
-        }
-    }
+    return (index >> (name - 'A')) & 1;
 }
 
-void print_table(Node *root, int variables_count, char *variables)
+// Функция для вычисления значения булевой формулы с использованием построенного дерева
+bool evaluate_expression(Node *node, int index)
 {
-    int rows = 1 << variables_count;
+    if (node->data == '1')
+    {
+        return true;
+    }
+    if (node->data == '0')
+    {
+        return false;
+    }
+    if (isalpha(node->data))
+    {
+        return eval_variable(node->data, index);
+    }
+    bool left_value = evaluate_expression(node->left, index);
+    bool right_value = evaluate_expression(node->right, index);
+
+    switch (node->data)
+    {
+    case '&':
+        return left_value && right_value;
+    case '|':
+        return left_value || right_value;
+    case '~':
+        return !right_value;
+        // Добавь обработку остальных операторов по аналогии
+    }
+
+    return false;
+}
+
+// Функция для печати таблицы истинности
+void print_truth_table(Node *root, int num_variables)
+{
     printf("Truth Table:\n");
 
-    for (int i = 0; i < variables_count; i++)
+    // Вывод заголовка таблицы с переменными
+    for (char c = 'A'; c < 'A' + num_variables; c++)
     {
-        printf("%c ", variables[i]);
+        printf("%c ", c);
     }
     printf("| Result\n");
 
-    for (int i = 0; i < rows; i++)
+    // Вывод значений переменных и результат для каждой комбинации
+    int total_combinations = 1 << num_variables; // 2^num_variables
+    for (int i = 0; i < total_combinations; i++)
     {
-        for (int j = 0; j < variables_count; j++)
+        for (int j = num_variables - 1; j >= 0; j--)
         {
-            printf("%d ", (i >> (variables_count - 1 - j)) & 1);
+            printf("%d ", eval_variable('A' + j, i));
         }
-        printf("| %d\n", evaluate(root, i));
+        printf("| %d\n", evaluate_expression(root, i));
     }
 }
-
 check_data read_input(char *file)
 {
     FILE *file_input = fopen(file, "r");
@@ -276,12 +367,13 @@ check_data read_input(char *file)
 
     char *str = NULL;
     size_t size = 0;
+    check_data postfix_res, tree_res;
+
     if (getline(&str, &size, file_input) == -1)
     {
         fclose(file_input);
         return incorrect_data;
     }
-
     int str_length = strlen(str);
     for (int j = 0; j < str_length; j++)
     {
@@ -290,58 +382,46 @@ check_data read_input(char *file)
             str[j] = '\0';
         }
     }
-
     if (bracket_balance(str) == 0)
     {
         free(str);
         fclose(file_input);
-        return incorrect_data;
+        return no_brackets;
     }
-
-    int variables_count = 0;
-    int variables_check[26] = {0}; // 1 - variable has occurred
-    char variables[26] = {0};      // Array for storing variables
-
-    for (int i = 0; str[i] != '\0'; i++)
-    {
-        if (isalpha(str[i]) && !variables_check[toupper(str[i]) - 'A'])
-        {
-            if (variables_count == 26)
-            {
-                free(str);
-                fclose(file_input);
-                return incorrect_data;
-            }
-
-            variables_check[toupper(str[i]) - 'A'] = 1;
-            variables[variables_count] = toupper(str[i]);
-            variables_count++;
-        }
-    }
-
     char *postfix = NULL;
-    switch (conversion_to_postfix(str, &postfix))
-    {
-    case memory_alloc_error:
-    case incorrect_data:
-    case stack_is_empty:
-        free(str);
-        fclose(file_input);
-        return memory_alloc_error;
-    }
-
-    Node *root = create_tree(postfix);
-    if (!root)
+    postfix_res = conversion_to_postfix(str, &postfix);
+    if (postfix_res != correct_data)
     {
         free(str);
         free(postfix);
         fclose(file_input);
-        return memory_alloc_error;
+        return postfix_res;
+    }
+    Node *root = NULL;
+    tree_res = create_tree(&root, postfix);
+    if (tree_res != correct_data)
+    {
+        free(str);
+        free(postfix);
+        fclose(file_input);
+        return tree_res;
+    }
+    // здесь надо сделать печать
+    // Определение количества уникальных переменных в выражении
+    int num_variables = 0;
+    for (int i = 0; i < strlen(str); i++)
+    {
+        if (isalpha(str[i]) && strchr(str, str[i]) == &str[i])
+        {
+            num_variables++;
+        }
     }
 
-    print_table(root, variables_count, variables);
+    // Печать таблицы истинности
+    print_truth_table(root, num_variables);
 
     free(str);
+    free_tree(root);
     free(postfix);
     fclose(file_input);
     return correct_data;

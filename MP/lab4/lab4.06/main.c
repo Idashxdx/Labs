@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
     case correct_data:
         printf("Files reading\n");
         break;
-         case incorrect_data:
+    case incorrect_data:
         printf("Incorrect data in file\n");
         break;
     case file_open_error:
@@ -23,7 +23,10 @@ int main(int argc, char *argv[])
     case stack_is_empty:
         printf("Error when popping from stack\n");
         break;
+    case no_brackets:
+        printf("Unbalanced brackets\n");
+        break;
     }
-    printf("M8O-211B-22  Mashrabova  lab4 tack5\n");
+    printf("M8O-211B-22  Mashrabova  lab4 tack6\n");
     return 0;
 }
