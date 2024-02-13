@@ -275,6 +275,10 @@ int oversscanf(const char *str, const char *format, ...)
                 str_ptr++;
             }
         }
+        else if (*format == '%')
+        {
+           
+        }
     }
     va_end(arg);
     return result;
