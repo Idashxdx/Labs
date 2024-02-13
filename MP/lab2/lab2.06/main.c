@@ -18,7 +18,6 @@ int main()
     printf("Decimal Number 1 ---> %d\n", cv_num_lower);
     printf("Decimal Number 2 ---> %u\n", cv_num_upper);
     fclose(file);
-
     char input_str[] = "XXI 11000 -af AF";
     int romanNumber2, zeckendorfNumber2, cv_num_lower2;
     unsigned int cv_num_upper2;
