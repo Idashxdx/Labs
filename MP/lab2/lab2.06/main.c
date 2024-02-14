@@ -21,7 +21,7 @@ int main()
     char input_str[] = "XXI 11000 -af AF 21";
     int romanNumber2, zeckendorfNumber2, cv_num_lower2, number;
     unsigned int cv_num_upper2;
-    oversscanf(input_str, "%Ro %Zr %Cv %CV", &romanNumber2, &zeckendorfNumber2, &cv_num_lower2, 16, &cv_num_upper2, 16, &number);
+    oversscanf(input_str, "%Ro %Zr %Cv %CV %d", &romanNumber2, &zeckendorfNumber2, &cv_num_lower2, 16, &cv_num_upper2, 16, &number);
 
     printf("From string:\n");
     printf("Roman Number ---> %d\n", romanNumber2);

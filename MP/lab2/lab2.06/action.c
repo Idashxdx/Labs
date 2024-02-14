@@ -174,6 +174,29 @@ int overfscanf(FILE *file, const char *format, ...)
             result++;
             ptr += 2;
         }
+        else if (*ptr == '%')
+        {
+            va_list arg_copy;
+            va_copy(arg_copy, arg);
+
+            int temp;
+            if (vsscanf(str_ptr, ptr - 1, arg_copy) != 1)
+            {
+                break;
+            }
+
+            while (*str_ptr && *str_ptr != ' ')
+            {
+                str_ptr++;
+            }
+            while (*str_ptr && *str_ptr == ' ')
+            {
+                str_ptr++;
+            }
+
+            result++;
+            va_end(arg_copy);
+        }
     }
 
     va_end(arg);
@@ -275,9 +298,28 @@ int oversscanf(const char *str, const char *format, ...)
                 str_ptr++;
             }
         }
-        else if (*format == '%')
+        else if (*ptr == '%')
         {
-           
+            va_list arg_copy;
+            va_copy(arg_copy, arg);
+
+            int temp;
+            if (vsscanf(str_ptr, ptr - 1, arg_copy) != 1)
+            {
+                break;
+            }
+
+            while (*str_ptr && *str_ptr != ' ')
+            {
+                str_ptr++;
+            }
+            while (*str_ptr && *str_ptr == ' ')
+            {
+                str_ptr++;
+            }
+
+            result++;
+            va_end(arg_copy);
         }
     }
     va_end(arg);
