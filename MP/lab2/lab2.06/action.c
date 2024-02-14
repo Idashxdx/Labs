@@ -178,24 +178,11 @@ int overfscanf(FILE *file, const char *format, ...)
         {
             va_list arg_copy;
             va_copy(arg_copy, arg);
-
             int temp;
-            if (vsscanf(str_ptr, ptr - 1, arg_copy) != 1)
+            if (vfscanf(file, ptr - 1, arg_copy) != 1)
             {
                 break;
             }
-
-            while (*str_ptr && *str_ptr != ' ')
-            {
-                str_ptr++;
-            }
-            while (*str_ptr && *str_ptr == ' ')
-            {
-                str_ptr++;
-            }
-
-            result++;
-            va_end(arg_copy);
         }
     }
 
@@ -302,13 +289,11 @@ int oversscanf(const char *str, const char *format, ...)
         {
             va_list arg_copy;
             va_copy(arg_copy, arg);
-
             int temp;
             if (vsscanf(str_ptr, ptr - 1, arg_copy) != 1)
             {
                 break;
             }
-
             while (*str_ptr && *str_ptr != ' ')
             {
                 str_ptr++;
@@ -320,6 +305,9 @@ int oversscanf(const char *str, const char *format, ...)
 
             result++;
             va_end(arg_copy);
+        }
+        else
+        {
         }
     }
     va_end(arg);
