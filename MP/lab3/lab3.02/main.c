@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     case correct_data:
     {
         Vector v2;
-        switch (create_vector(&v2, 3, 2.0, 2.0, 2.0))
+        switch (create_vector(&v2, 3, 8.0, 2.0, 2.0))
         {
         case correct_data:
         {

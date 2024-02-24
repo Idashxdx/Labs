@@ -270,6 +270,7 @@ int main(int argc, char *argv[])
                 printf("Choose. Write:\n");
                 printf("<best>  - write in file best student\n");
                 printf("<gpa> - student's average exam score by id\n");
+                printf("<gpa_all> - all student's average exam\n");
                 printf("<back> - back\n\n");
                 printf("ENTER ----> ");
                 scanf("%s", act4);
@@ -339,6 +340,40 @@ int main(int argc, char *argv[])
                     {
                         fprintf(output_file, "Student with id %u not found\n", id_to_find);
                         fflush(output_file);
+                    }
+                    printf("Result write to file\n\n");
+                }
+                else if (strcmp(act4, "gpa_all") == 0)
+                {
+                    fgets(act4, sizeof(act4), stdin);
+                    double total_sum = 0;
+                    size_t total_count = 0;
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        for (size_t j = 0; j < 5; j++)
+                        {
+                            total_sum += students[i].grades[j];
+                            total_count++;
+                        }
+                    }
+                    double average_grade_all = total_sum / total_count;
+
+                    fprintf(output_file, "Students with above average GPA for all exams:\n");
+                    fflush(output_file);
+                    for (size_t i = 0; i < count; i++)
+                    {
+                        double sum = 0;
+                        for (size_t j = 0; j < 5; j++)
+                        {
+                            sum += students[i].grades[j];
+                        }
+                        double student_average = sum / 5;
+
+                        if (student_average > average_grade_all)
+                        {
+                            fprintf(output_file, "%s %s\n", students[i].surname, students[i].name);
+                            fflush(output_file);
+                        }
                     }
                     printf("Result write to file\n\n");
                 }

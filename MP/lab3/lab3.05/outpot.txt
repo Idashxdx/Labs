@@ -1,0 +1,15 @@
+Student: 
+1 --> 21212; N; V; 11; Grades: 5 4 5 4 3
+
+2 --> 55312; V; A; 22; Grades: 3 3 3 4 3
+
+3 --> 2133; A; E; 10; Grades: 5 5 5 5 5
+
+4 --> 11; D; D; 10; Grades: 5 4 5 4 5
+
+5 --> 12; F; F; 32; Grades: 3 3 3 3 3
+
+Students with above average GPA for all exams:
+V N
+E A
+D D
